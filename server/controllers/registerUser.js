@@ -1,5 +1,6 @@
 import UserModel from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
+import generateToken from "../utils/generateToken.js";
 
 export default async function registerUser(req, res) {
   try {
@@ -25,12 +26,19 @@ export default async function registerUser(req, res) {
     };
 
     const newUser = new UserModel(payload);
-    await newUser.save();
-
-    return res.status(200).json({
-      message: "user created successfully",
-      data: newUser,
-    });
+    if (newUser) {
+      generateToken(newUser._id, res);
+      await newUser.save();
+      res.status(200).json({
+        message: "user created successfully",
+        data: newUser,
+      });
+    } else {
+      res.status(400).json({
+        message: "invalid user data",
+        error: true,
+      });
+    }
 
   } catch (error) {
     console.log("error in register user controller");
