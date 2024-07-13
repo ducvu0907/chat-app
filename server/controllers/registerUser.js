@@ -6,7 +6,7 @@ export default async function registerUser(req, res) {
   try {
     const { fullName, username, password, confirmPassword } = req.body;
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "passwords don't match" });
+      return res.status(400).json({ message: "passwords don't match", error: true });
     }
     const user = await UserModel.findOne({ username });
     if (user) {
@@ -29,9 +29,11 @@ export default async function registerUser(req, res) {
     if (newUser) {
       generateToken(newUser._id, res);
       await newUser.save();
-      res.status(200).json({
-        message: "user created successfully",
-        data: newUser,
+      res.status(201).json({
+        _id: newUser._id,
+        fullName,
+        username,
+        profilePic
       });
     } else {
       res.status(400).json({

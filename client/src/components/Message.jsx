@@ -1,0 +1,36 @@
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { ConversationContext } from "../context/ConversationContext";
+
+export default function Message({ message }) {
+  const { authUser } = useContext(AuthContext);
+  const { selectedConversation } = useContext(ConversationContext);
+  const fromUser = message.senderId === authUser._id;
+  const chatClassName = fromUser ? "chat-end" : "chat-start";
+  const profilePic = fromUser ? authUser.profilePic : selectedConversation?.profilePic;
+  const bubbleBgColor = fromUser ? "bg-blue-500" : "";
+
+  const formattedTime = (date) => {
+    let hours = date.getHours();
+    let minutes = data.getMinutes();
+    if (hours < 10) {
+      hours = '0' + hours;
+    }
+    if (minutes < 10) {
+      minutes = '0' + minutes;
+    }
+    return `${hours}:${minutes}`;
+  };
+
+  return (
+    <div className={`chat ${chatClassName}`}>
+      <div className='chat-image avatar'>
+        <div className='w-10 rounded-full'>
+          <img alt='Tailwind CSS chat bubble component' src={profilePic} />
+        </div>
+      </div>
+      <div className={`chat-bubble text-white ${bubbleBgColor} pb-2`}>{message.message}</div>
+      <div className='chat-footer opacity-50 text-xs flex gap-1 items-center'>{formattedTime(message.createdAt)}</div>
+    </div>
+  );
+};

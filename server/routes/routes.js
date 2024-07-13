@@ -9,7 +9,6 @@ import verifyToken from "../utils/verifyToken.js";
 import sendMessageToUserId from "../controllers/sendMessageToUserId.js";
 import sendMessageToConversationId from "../controllers/sendMessageToConversationId.js";
 
-
 const router = express.Router();
 
 // user routes

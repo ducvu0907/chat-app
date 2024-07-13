@@ -14,9 +14,17 @@ export default async function sendMessageToUserId(req, res) {
       });
     }
 
-    let conversation = await ConversationModel.findOne({
-      participants: { $all: [loggedInUserId, userId] },
-    });
+    let conversation;
+
+    if (loggedInUserId == userId) { // handle monologue
+      conversation = await ConversationModel.findOne({
+        participants: [loggedInUserId, userId],
+      });
+    } else {
+      conversation = await ConversationModel.findOne({
+        participants: { $all: [loggedInUserId, userId] },
+      });
+    }
 
     if (!conversation) {
       conversation = await ConversationModel.create({
