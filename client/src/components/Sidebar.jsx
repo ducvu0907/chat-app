@@ -1,17 +1,56 @@
 import { useContext, useState, useEffect } from 'react';
 import LogoutButton from './LogoutButton';
-import SearchBar from './SearchBar';
 import { AuthContext } from '../context/AuthContext';
+import toast from 'react-hot-toast';
+import SideConversation from './SideConversation';
+import { ConversationContext } from '../context/ConversationContext';
 
 export default function Sidebar() {
   const [loading, setLoading] = useState(false);
+  const [conversations, setConversations] = useState([]);
   const { authUser } = useContext(AuthContext);
 
+  useEffect(() => {
+    setLoading(true);
+    const fetchConversations = async () => {
+      try {
+        const res = await fetch("/api/conversation");
+        const data = await res.json();
+        if (data.error) {
+          throw new Error(data.message);
+        }
+        setConversations(data);
+
+      } catch (error) {
+        toast.error(error);
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConversations();
+  }, []);
+
+
   return (
-    <div className='border-r border-slate-500 p-4 flex flex-col'>
-      <SearchBar />
-      <div className='divider px-3'></div>
-      <LogoutButton />
+    <div className="w-[30%] h-full border-r border-slate-600 p-4 flex flex-col bg-slate-800">
+      {loading ? <span className="loading loading-spinner"></span> :
+        <div className="w-full h-full bg-slate-600 rounded-md overflow-auto">
+          <h2 className="text-center text-xl my-2 font-semibold">Messages</h2>
+          {conversations.map((conversation, idx) => <SideConversation key={idx} conversation={conversation} />)}
+        </div>
+      }
+      <div className="w-full flex justify-between border-2 border-slate-500 rounded-md p-1 mx-auto mt-2">
+        <div className="flex">
+          <img className="avatar m-2" width={"40px"} height={"40px"} src={authUser.profilePic} />
+          <div className="flex flex-col my-auto">
+            <p className="text-lg text-white">{authUser.fullName}</p>
+            <p className="text-sm text-gray-500">#{authUser.username}</p>
+          </div>
+        </div>
+        <LogoutButton />
+      </div>
     </div>
   );
 };

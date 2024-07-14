@@ -6,11 +6,11 @@ export default async function registerUser(req, res) {
   try {
     const { fullName, username, password, confirmPassword } = req.body;
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "passwords don't match", error: true });
+      return res.status(401).json({ message: "passwords don't match", error: true });
     }
     const user = await UserModel.findOne({ username });
     if (user) {
-      return res.status(400).json({ message: "username already exists", error: true });
+      return res.status(401).json({ message: "username already exists", error: true });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -36,7 +36,7 @@ export default async function registerUser(req, res) {
         profilePic
       });
     } else {
-      res.status(400).json({
+      res.status(401).json({
         message: "invalid user data",
         error: true,
       });

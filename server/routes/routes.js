@@ -8,13 +8,17 @@ import getMessagesByConversationId from "../controllers/getMessagesByConversatio
 import verifyToken from "../utils/verifyToken.js";
 import sendMessageToUserId from "../controllers/sendMessageToUserId.js";
 import sendMessageToConversationId from "../controllers/sendMessageToConversationId.js";
+import getFilteredUsers from "../controllers/getFilteredUsers.js";
 
 const router = express.Router();
 
-// user routes
+// auth routes
 router.post("/auth/register", registerUser);
 router.post("/auth/login", loginUser);
 router.post("/auth/logout", logoutUser);
+
+// user routes
+router.get("/user", verifyToken, getFilteredUsers);
 
 // message routes
 router.get("/message/:userId", verifyToken, getMessagesByUserId);

@@ -1,13 +1,18 @@
 import ConversationContainer from "../components/ConversationContainer"
 import Sidebar from "../components/Sidebar"
+import UsersBar from "../components/UsersBar"
 import { ConversationContextProvider } from "../context/ConversationContext"
+import { UsersContextProvider } from "../context/FilteredUsersContext"
 
 export default function Home() {
   return (
     <ConversationContextProvider>
-      <div className="flex sm:h-[450px] md:h-[550px] rounded-lg overflow-hidden bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0">
+      <div className="w-full h-full flex">
         <Sidebar />
         <ConversationContainer />
+        <UsersContextProvider>
+          <UsersBar />
+        </UsersContextProvider>
       </div>
     </ConversationContextProvider>
   )

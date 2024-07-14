@@ -9,10 +9,13 @@ export default async function getConversations(req, res) {
     }).populate("participants");
 
     let users = [];
-
     conversations.forEach(conversation => {
-      const receiver = conversation.participants.filter(participant => participant._id !== loggedInUserId)[0];
-      users.push(receiver);
+      let participants = conversation.participants;
+      if (participants[0]._id.equals(loggedInUserId)) {
+        users.push(participants[1]);
+      } else {
+        users.push(participants[0]);
+      }
     });
 
     res.status(200).json(users);

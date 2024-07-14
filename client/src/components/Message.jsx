@@ -11,8 +11,8 @@ export default function Message({ message }) {
   const bubbleBgColor = fromUser ? "bg-blue-500" : "";
 
   const formattedTime = (date) => {
-    let hours = date.getHours();
-    let minutes = data.getMinutes();
+    let hours = new Date(date).getHours();
+    let minutes = new Date(date).getMinutes();
     if (hours < 10) {
       hours = '0' + hours;
     }
@@ -29,8 +29,8 @@ export default function Message({ message }) {
           <img alt='Tailwind CSS chat bubble component' src={profilePic} />
         </div>
       </div>
-      <div className={`chat-bubble text-white ${bubbleBgColor} pb-2`}>{message.message}</div>
-      <div className='chat-footer opacity-50 text-xs flex gap-1 items-center'>{formattedTime(message.createdAt)}</div>
+      <div className={`chat-bubble text-white ${bubbleBgColor} pb-2`}>{message.text}</div>
+      <div className='chat-footer opacity-50 text-xs flex gap-1 items-center text-gray-300'>{formattedTime(message.createdAt)}</div>
     </div>
   );
 };

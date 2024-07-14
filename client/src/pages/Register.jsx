@@ -25,7 +25,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(info),
@@ -34,7 +34,6 @@ export default function Register() {
       if (data.error) {
         throw new Error(data.message);
       }
-      console.log(data);
       localStorage.setItem("user", JSON.stringify(data));
       setAuthUser(data);
 

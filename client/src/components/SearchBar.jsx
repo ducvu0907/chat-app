@@ -1,26 +1,49 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
-import toast from "react-hot-toast";
-import { ConversationContext } from "../context/ConversationContext";
+import { UsersContext } from "../context/FilteredUsersContext";
 
 export default function SearchBar() {
   const [searchInput, setSearchInput] = useState("");
-  const { selectedConversation, setSelectedConversation } = useContext(ConversationContext);
+  const { users, setUsers } = useContext(UsersContext);
 
-  const handleSearch = (e) => {
+  // FIXME: revert users array instead of refetching every single time but i'm too lazy to try
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("/api/user");
+        const data = await res.json();
+        if (data.error) {
+          throw new Error(data.message);
+        }
+        setUsers(data);
+
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+
+    if (!searchInput) {
+      fetchUsers();
+    }
+  }, [searchInput]);
+
+  const handleSearchUser = (e) => {
+    e.preventDefault();
+    const search = searchInput.split(' ').join().toLocaleLowerCase();
+    setUsers(users.filter(user => user.fullName.split(' ').join().toLocaleLowerCase().includes(search)));
   };
 
   return (
-    <form onSubmit={handleSearch} className='flex items-center gap-2'>
+    <form onSubmit={handleSearchUser} className='flex items-center gap-2 mx-auto'>
       <input
         type='text'
         placeholder='Search'
-        className='input input-bordered rounded-full'
+        className='input input-bordered rounded-full bg-slate-600 text-white w-[80%]'
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
       />
-      <button type='submit' className='btn btn-circle bg-sky-500 text-white'>
-        <IoSearchSharp className='w-6 h-6 outline-none' />
+      <button type='submit' className='btn btn-circle bg-slate-500 text-white'>
+        <IoSearchSharp className='w-5 h-5 outline-none' />
       </button>
     </form>
   );
