@@ -8,6 +8,7 @@ export default function UsersBar() {
   const [loading, setLoading] = useState(false);
   const { users, setUsers } = useContext(UsersContext);
   const { setSelectedConversation } = useContext(ConversationContext);
+  const [defaultUsers, setDefaultUsers] = useState([]); // for more effcient searching
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -19,6 +20,7 @@ export default function UsersBar() {
           throw new Error(data.message);
         }
         setUsers(data);
+        setDefaultUsers(data);
 
       } catch (error) {
         toast.error(error);
@@ -51,7 +53,7 @@ export default function UsersBar() {
 
   return (
     <div className="w-[30%] h-full border-r border-slate-800 p-4 flex flex-col bg-slate-500">
-      <SearchBar />
+      <SearchBar defaultUsers={defaultUsers} />
       <div className="divider m-0"></div>
       {loading ? <span className="loading loading-spinner"></span> :
         <div className="w-full h-full bg-slate-300 rounded-md">

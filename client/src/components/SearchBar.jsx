@@ -2,35 +2,24 @@ import { useContext, useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import { UsersContext } from "../context/FilteredUsersContext";
 
-export default function SearchBar() {
+export default function SearchBar({ defaultUsers }) {
   const [searchInput, setSearchInput] = useState("");
-  const { users, setUsers } = useContext(UsersContext);
+  const { setUsers } = useContext(UsersContext);
 
-  // FIXME: revert users array instead of refetching every single time but i'm too lazy to try
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch("/api/user");
-        const data = await res.json();
-        if (data.error) {
-          throw new Error(data.message);
-        }
-        setUsers(data);
-
-      } catch (error) {
-        toast.error(error);
-      }
-    };
-
     if (!searchInput) {
-      fetchUsers();
+      setUsers(defaultUsers);
     }
   }, [searchInput]);
 
   const handleSearchUser = (e) => {
     e.preventDefault();
-    const search = searchInput.split(' ').join().toLocaleLowerCase();
-    setUsers(users.filter(user => user.fullName.split(' ').join().toLocaleLowerCase().includes(search)));
+    const searchQuery = searchInput.trim().toLowerCase();
+    if (!searchQuery) {
+      return;
+    }
+    const filteredUsers = defaultUsers.filter(user => user.fullName.toLowerCase().includes(searchQuery));
+    setUsers(filteredUsers);
   };
 
   return (

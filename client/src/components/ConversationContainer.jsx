@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { ConversationContext } from "../context/ConversationContext";
 import { TiMessages } from "react-icons/ti";
 import Message from "./Message";
@@ -9,6 +9,14 @@ export default function ConversationContainer() {
   const [loading, setLoading] = useState(false);
   const { selectedConversation } = useContext(ConversationContext);
   const [messages, setMessages] = useState([]);
+  const lastMessageRef = useRef();
+
+  // auto scroll to the last message
+  useEffect(() => {
+    setTimeout(() => {
+      lastMessageRef.current?.scrollIntoView({ behaviour: "smooth" });
+    }, 100);
+  }, [messages]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -40,7 +48,7 @@ export default function ConversationContainer() {
         {!loading &&
           messages.length > 0 &&
           messages.map((message) => (
-            <div key={message._id}>
+            <div key={message._id} ref={lastMessageRef}>
               <Message message={message} />
             </div>
           ))}
