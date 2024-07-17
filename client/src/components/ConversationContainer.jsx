@@ -4,20 +4,16 @@ import { TiMessages } from "react-icons/ti";
 import Message from "./Message";
 import toast from "react-hot-toast";
 import MessageInput from "./MessageInput";
+import { SocketContext } from "../context/SocketContext";
 
 export default function ConversationContainer() {
   const [loading, setLoading] = useState(false);
   const { selectedConversation } = useContext(ConversationContext);
   const [messages, setMessages] = useState([]);
   const lastMessageRef = useRef();
+  const { socket } = useContext(SocketContext);
 
-  // auto scroll to the last message
-  useEffect(() => {
-    setTimeout(() => {
-      lastMessageRef.current?.scrollIntoView({ behaviour: "smooth" });
-    }, 100);
-  }, [messages]);
-
+  // fetch messages
   useEffect(() => {
     const getMessages = async () => {
       setLoading(true);
@@ -28,6 +24,7 @@ export default function ConversationContainer() {
           throw new Error(data.message);
         }
         setMessages(data);
+        console.log(data);
 
       } catch (error) {
         toast.error(error);
@@ -40,11 +37,17 @@ export default function ConversationContainer() {
     if (selectedConversation?._id) {
       getMessages();
     }
-  }, [selectedConversation]);
+  }, [selectedConversation, messages.length]);
 
   const Messages = () => {
+    useEffect(() => {
+      socket?.on("newMessage", (newMessage) => {
+        setMessages([...messages, newMessage]);
+      });
+    }, [socket, setMessages, messages]);
+
     return (
-      <div className='px-4 flex-1 overflow-auto'>
+      <div className='px-4 flex-1 overflow-y-auto'>
         {!loading &&
           messages.length > 0 &&
           messages.map((message) => (
@@ -59,6 +62,13 @@ export default function ConversationContainer() {
       </div>
     )
   };
+
+  // auto scroll to the last message
+  useEffect(() => {
+    setTimeout(() => {
+      lastMessageRef.current?.scrollIntoView({ behaviour: "instant" });
+    }, 100);
+  }, [messages]);
 
   const NoSelectedConversation = () => {
     return (
@@ -83,7 +93,7 @@ export default function ConversationContainer() {
             <span className='text-white font-bold'>{selectedConversation.fullName}</span>
           </div>
           <Messages />
-          <MessageInput />
+          <MessageInput messages={messages} setMessages={setMessages} />
         </>
       )}
     </div>

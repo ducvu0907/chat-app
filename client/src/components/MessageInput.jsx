@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { BsSend } from "react-icons/bs";
 import { ConversationContext } from "../context/ConversationContext";
 
-export default function MessageInput() {
+export default function MessageInput({ messages, setMessages }) {
   const { selectedConversation } = useContext(ConversationContext);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
@@ -28,6 +28,7 @@ export default function MessageInput() {
         throw new Error(data.message);
       }
       toast.success("Message sent!");
+      setMessages([...messages, data])
 
     } catch (error) {
       toast.error(error);

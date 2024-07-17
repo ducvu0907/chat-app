@@ -3,12 +3,13 @@ import SearchBar from "./SearchBar";
 import toast from "react-hot-toast";
 import { ConversationContext } from "../context/ConversationContext";
 import { UsersContext } from "../context/FilteredUsersContext";
+import { SocketContext } from "../context/SocketContext";
 
 export default function UsersBar() {
   const [loading, setLoading] = useState(false);
   const { users, setUsers } = useContext(UsersContext);
   const { setSelectedConversation } = useContext(ConversationContext);
-  const [defaultUsers, setDefaultUsers] = useState([]); // for more effcient searching
+  const [defaultUsers, setDefaultUsers] = useState([]); // for more effcient users searching
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -33,7 +34,9 @@ export default function UsersBar() {
   }, []);
 
   const UserComponent = ({ user }) => {
-    let isOnline = false;
+    const { onlineUsers } = useContext(SocketContext);
+    let isOnline = onlineUsers.includes(user._id);
+
     return (
       <div className={`flex gap-2 items-center hover:bg-blue-800 p-2 py-1 cursor-pointer border-b-2 border-b-gray-400`} onClick={() => setSelectedConversation(user)}>
         <div className={`avatar ${isOnline ? "online" : ""}`}>
