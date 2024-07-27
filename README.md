@@ -1,6 +1,6 @@
 # Chat App
 
-Real time chat application using MERN and Socket.IO
+A simple chat application using Socket.IO
 
 ## Features
 
