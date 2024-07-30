@@ -1,4 +1,5 @@
-import ConversationModel from "../models/conversation";
+import ConversationModel from "../models/conversation.js";
+import UserModel from "../models/user.js";
 
 export default async function getConversationById(req, res) {
   try {

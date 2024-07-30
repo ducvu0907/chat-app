@@ -1,4 +1,4 @@
-import ConversationModel from "../models/conversation";
+import ConversationModel from "../models/conversation.js";
 
 export default async function getMessages(req, res) {
   try {

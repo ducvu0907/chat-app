@@ -1,4 +1,4 @@
-import UserModel from "../models/user";
+import UserModel from "../models/user.js";
 
 export default async function getConversations(req, res) {
   try {

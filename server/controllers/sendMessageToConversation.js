@@ -1,5 +1,5 @@
-import MessageModel from "../models/message";
-import ConversationModel from "../models/conversation";
+import MessageModel from "../models/message.js";
+import ConversationModel from "../models/conversation.js";
 
 // FIXME: handle sending files in the message
 export default async function sendMessageToConversation(req, res) {
@@ -7,17 +7,21 @@ export default async function sendMessageToConversation(req, res) {
     const userId = req.user._id;
     const conversationId = req.params.conversationId;
     const { text } = req.body;
-    const file = req.file ? `/uploads/${req.file.filename}` : null; // path to /uploads folder
+    const file = req.file ? `/uploads/${req.file.filename}` : null;
 
     const conversation = await ConversationModel.findById(conversationId);
+    if (!conversation) {
+      return res.status(400).json({
+        error: "invalid conversation",
+      });
+    }
     const message = new MessageModel({
       sender: userId,
       text: text,
       file: file,
-      seen: false,
     });
-    await message.save();
-    conversation.messsages.push(message._id);
+    conversation.messages.push(message._id);
+    await Promise.all([message.save(), conversation.save()]);
     res.status(201).json(message);
 
   } catch (error) {
