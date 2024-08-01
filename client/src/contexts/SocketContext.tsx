@@ -1,10 +1,15 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
-export const SocketContext = createContext(undefined);
+interface SocketContextType {
+  socket: Socket | null;
+  onlineUsers: any[];
+}
 
-export function SocketContextProvider({ children }) {
+export const SocketContext = createContext<SocketContextType>({ socket: null, onlineUsers: [] });
+
+export function SocketContextProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { authUser } = useContext(AuthContext);

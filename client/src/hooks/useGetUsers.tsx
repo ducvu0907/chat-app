@@ -10,7 +10,7 @@ export default function useGetUsers() {
   const [defaultUsers, setDefaultUsers] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const getUsers = async () => {
       setLoading(true);
       try {
         const res = await fetch("/api/users");
@@ -28,7 +28,8 @@ export default function useGetUsers() {
       }
     };
 
-    fetchUsers();
+    getUsers();
   }, []);
+
   return { loading, users };
 }

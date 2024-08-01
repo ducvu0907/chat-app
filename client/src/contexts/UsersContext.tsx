@@ -1,9 +1,14 @@
-import { createContext, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 
-export const UsersContext = createContext(undefined);
+interface UsersContextType {
+  users: [];
+  setUsers: React.Dispatch<React.SetStateAction<[]>>;
+}
 
-export function UsersContextProvider({ children }) {
-  const [users, setUsers] = useState([]);
+export const UsersContext = createContext<UsersContextType>({ users: [], setUsers: () => { } });
+
+export function UsersContextProvider({ children }: { children: ReactNode }) {
+  const [users, setUsers] = useState<[]>([]);
 
   return <UsersContext.Provider value={{ users, setUsers }}>
     {children}

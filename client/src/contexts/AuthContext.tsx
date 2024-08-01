@@ -1,9 +1,14 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, useState, ReactNode } from "react";
 
-export const AuthContext = createContext(undefined);
+interface AuthContextType {
+  authUser: {} | null;
+  setAuthUser: React.Dispatch<React.SetStateAction<{} | null>>;
+}
 
-export function AuthContextProvider({ children }) {
-  const [authUser, setAuthUser] = useState<string | null>(JSON.parse(localStorage.getItem("user") || "null"));
+export const AuthContext = createContext<AuthContextType>({ authUser: null, setAuthUser: () => { } });
+
+export function AuthContextProvider({ children }: { children: ReactNode }) {
+  const [authUser, setAuthUser] = useState<{} | null>(JSON.parse(localStorage.getItem("user") || "null"));
 
   return <AuthContext.Provider value={{ authUser, setAuthUser }}>
     {children}

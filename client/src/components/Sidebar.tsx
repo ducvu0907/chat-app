@@ -1,6 +1,6 @@
 import LogoutButton from './LogoutButton';
-import { AuthContext } from '../context/AuthContext';
-import SideConversation from './SideConversation';
+import { AuthContext } from '../contexts/AuthContext';
+import SideConversation from './SideConverstation';
 import { useContext } from 'react';
 import useGetConversations from '../hooks/useGetConversations';
 

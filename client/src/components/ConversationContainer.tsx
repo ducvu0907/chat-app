@@ -7,61 +7,6 @@ import MessageInput from "./MessageInput";
 import { SocketContext } from "../context/SocketContext";
 
 export default function ConversationContainer() {
-  const [loading, setLoading] = useState(false);
-  const { selectedConversation } = useContext(ConversationContext);
-  const [messages, setMessages] = useState([]);
-  const lastMessageRef = useRef();
-  const { socket } = useContext(SocketContext);
-
-  // fetch messages
-  useEffect(() => {
-    const getMessages = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`/api/message/${selectedConversation._id}`);
-        const data = await res.json();
-        if (data.error) {
-          throw new Error(data.message);
-        }
-        setMessages(data);
-        console.log(data);
-
-      } catch (error) {
-        toast.error(error);
-
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (selectedConversation?._id) {
-      getMessages();
-    }
-  }, [selectedConversation, messages.length]);
-
-  const Messages = () => {
-    useEffect(() => {
-      socket?.on("newMessage", (newMessage) => {
-        setMessages([...messages, newMessage]);
-      });
-    }, [socket, setMessages, messages]);
-
-    return (
-      <div className='px-4 flex-1 overflow-y-auto'>
-        {!loading &&
-          messages.length > 0 &&
-          messages.map((message) => (
-            <div key={message._id} ref={lastMessageRef}>
-              <Message message={message} />
-            </div>
-          ))}
-
-        {!loading && messages.length === 0 && (
-          <p className='text-center text-2xl text-orange-300'>Send a message to start the conversation</p>
-        )}
-      </div>
-    )
-  };
 
   // auto scroll to the last message
   useEffect(() => {
