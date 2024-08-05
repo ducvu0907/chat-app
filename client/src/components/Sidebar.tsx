@@ -18,10 +18,10 @@ export default function Sidebar() {
       }
       <div className="w-full flex justify-between border-2 border-slate-500 rounded-md p-1 mx-auto mt-2">
         <div className="flex">
-          <img className="avatar m-2" width={"40px"} height={"40px"} src={authUser.profilePic} />
+          <img className="avatar m-2" width={"40px"} height={"40px"} src={authUser?.profilePic} />
           <div className="flex flex-col my-auto">
-            <p className="text-lg text-white">{authUser.fullName}</p>
-            <p className="text-sm text-gray-500">#{authUser.username}</p>
+            <p className="text-lg text-white">{authUser?.name}</p>
+            <p className="text-sm text-gray-500">#{authUser?.email}</p>
           </div>
         </div>
         <LogoutButton />

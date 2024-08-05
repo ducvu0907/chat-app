@@ -1,9 +1,10 @@
+import { useRef } from "react";
+import useGetMessages from "../hooks/useGetMessages"
+import Message from "./Message";
+
 export default function Messages() {
-  useEffect(() => {
-    socket?.on("newMessage", (newMessage) => {
-      setMessages([...messages, newMessage]);
-    });
-  }, [socket, setMessages, messages]);
+  const { loading, messages } = useGetMessages();
+  const lastMessageRef = useRef();
 
   return (
     <div className='px-4 flex-1 overflow-y-auto'>

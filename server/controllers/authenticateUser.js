@@ -52,7 +52,7 @@ export async function signup(req, res) {
     const { name, email, password, confirmPassword } = req.body;
     if (password !== confirmPassword) {
       return res.status(401).json({
-        error: "passwords dont' match",
+        error: "passwords don't match",
       });
     }
     if (await UserModel.findOne({ email })) {

@@ -4,6 +4,9 @@ const conversationSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  picture: {
+    type: String,
+  },
   participants: [
     {
       type: mongoose.Schema.ObjectId,

@@ -4,7 +4,13 @@ export default async function getMessages(req, res) {
   try {
     const userId = req.user._id;
     const conversationId = req.params.conversationId;
-    const conversation = await ConversationModel.findById(conversationId).populate("messages");
+    const conversation = await ConversationModel.findById(conversationId).populate({
+      path: "messages",
+      populate: {
+        path: "sender",
+        select: "name profilePic",
+      },
+    }).exec();
     if (!conversation) {
       return res.status(200).json([]);
     }

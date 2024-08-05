@@ -3,7 +3,24 @@ import UserModel from "../models/user.js";
 export default async function getConversations(req, res) {
   try {
     const userId = req.user._id;
-    const user = await UserModel.findById(userId).populate("conversations");
+    const user = await UserModel.findById(userId).populate({
+      path: "conversations",
+      populate: [
+        {
+          path: "participants",
+          select: "name profilePic"
+        },
+        {
+          path: "messages",
+          populate: {
+            path: "sender",
+            select: "name email"
+          },
+          select: "content createdAt"
+        }
+      ]
+    }).exec();
+
     if (!user) {
       res.status(400).json({
         error: "invalid user"

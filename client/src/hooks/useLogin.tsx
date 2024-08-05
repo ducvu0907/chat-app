@@ -15,7 +15,7 @@ export default function useLogin() {
     const { email, password } = info;
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -28,7 +28,7 @@ export default function useLogin() {
       setAuthUser(data);
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error((error as Error).message);
     } finally {
       setLoading(false);
     }

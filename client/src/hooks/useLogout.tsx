@@ -22,7 +22,7 @@ export default function useLogout() {
       toast.success("logged out successfully");
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error((error as Error).message);
     } finally {
       setLoading(false);
     }

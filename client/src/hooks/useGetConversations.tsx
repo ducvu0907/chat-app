@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 export default function useGetConversations() {
@@ -16,9 +15,10 @@ export default function useGetConversations() {
           throw new Error(data.message);
         }
         setConversations(data);
+        console.log(data);
 
       } catch (error) {
-        toast.error(error.message);
+        toast.error((error as Error).message);
 
       } finally {
         setLoading(false);

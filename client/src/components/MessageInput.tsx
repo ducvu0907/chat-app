@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { BsSend } from "react-icons/bs";
 import useSendMessage from "../hooks/useSendMessage";
 
 export default function MessageInput({ messages, setMessages }) {
   const [text, setText] = useState<string>("");
-  const [file, setFile] = useState<typeof file>(null);
+  const [file, setFile] = useState(null);
   const { loading, sendMessage } = useSendMessage();
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
