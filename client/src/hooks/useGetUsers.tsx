@@ -1,12 +1,10 @@
 import { useState, useEffect, useContext } from "react";
-import { ConversationContext } from "../contexts/ConversationContext";
 import { UsersContext } from "../contexts/UsersContext";
 import toast from "react-hot-toast";
 
 export default function useGetUsers() {
   const [loading, setLoading] = useState(false);
   const { users, setUsers } = useContext(UsersContext);
-  const { setSelectedConversation } = useContext(ConversationContext);
   const [defaultUsers, setDefaultUsers] = useState([]);
 
   useEffect(() => {
@@ -19,10 +17,12 @@ export default function useGetUsers() {
           throw new Error(data.message);
         }
         setUsers(data);
+        console.log(data);
         setDefaultUsers(data);
 
       } catch (error) {
-        toast.error(error.message);
+        toast.error((error as Error).message);
+
       } finally {
         setLoading(false);
       }
@@ -31,5 +31,5 @@ export default function useGetUsers() {
     getUsers();
   }, []);
 
-  return { loading, users };
+  return { loading, users, defaultUsers };
 }

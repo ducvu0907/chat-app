@@ -2,11 +2,13 @@ import { FormEvent, useState } from "react";
 import { BsSend } from "react-icons/bs";
 import useSendMessage from "../hooks/useSendMessage";
 
+// TODO: implement message input component
 export default function MessageInput({ messages, setMessages }) {
   const [text, setText] = useState<string>("");
   const [file, setFile] = useState(null);
-  const { loading, sendMessage } = useSendMessage();
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const { loading, sendMessage } = useSendMessage(); // FIXME
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     sendMessage({ text, file });
   }
@@ -17,7 +19,7 @@ export default function MessageInput({ messages, setMessages }) {
         <input
           type='text'
           className='border text-sm rounded-lg block w-full p-2.5  bg-gray-600 border-gray-600 text-white mb-5'
-          placeholder='Send a message'
+          placeholder='send a message'
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
@@ -26,7 +28,7 @@ export default function MessageInput({ messages, setMessages }) {
           className='border text-sm rounded-lg block w-full p-2.5  bg-gray-600 border-gray-600 text-white mb-5'
           placeholder='attach a file'
           value={text}
-          onChange={(e) => setFile(e.target.files)}
+          onChange={(e) => setFile(e.target.files)} // FIXME
         />
         <button type='submit' className='absolute inset-y-0 end-0 flex items-center pe-3'>
           {loading ? <div className='loading loading-spinner'></div> : <BsSend />}

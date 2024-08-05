@@ -15,7 +15,6 @@ export default function useGetConversations() {
           throw new Error(data.message);
         }
         setConversations(data);
-        console.log(data);
 
       } catch (error) {
         toast.error((error as Error).message);

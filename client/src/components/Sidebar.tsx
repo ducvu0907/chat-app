@@ -21,7 +21,7 @@ export default function Sidebar() {
           <img className="avatar m-2" width={"40px"} height={"40px"} src={authUser?.profilePic} />
           <div className="flex flex-col my-auto">
             <p className="text-lg text-white">{authUser?.name}</p>
-            <p className="text-sm text-gray-500">#{authUser?.email}</p>
+            <p className="text-sm text-gray-500">#{authUser?.email.split('@')[0]}</p>
           </div>
         </div>
         <LogoutButton />
