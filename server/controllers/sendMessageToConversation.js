@@ -1,13 +1,15 @@
 import MessageModel from "../models/message.js";
 import ConversationModel from "../models/conversation.js";
+import sharp from "sharp";
+import path from "path";
 
-// FIXME: handle sending files in the message
 export default async function sendMessageToConversation(req, res) {
   try {
     const userId = req.user._id;
     const conversationId = req.params.conversationId;
     const { text } = req.body;
-    const file = req.file ? `/uploads/${req.file.filename}` : null;
+    // FIXME: fix file format
+    const file = req.file ? req.file.path : null;
 
     const conversation = await ConversationModel.findById(conversationId);
     if (!conversation) {

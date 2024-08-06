@@ -17,7 +17,6 @@ export default function useGetUsers() {
           throw new Error(data.message);
         }
         setUsers(data);
-        console.log(data);
         setDefaultUsers(data);
 
       } catch (error) {

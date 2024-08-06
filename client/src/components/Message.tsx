@@ -25,7 +25,7 @@ export default function Message({ message }) {
           <img alt='Tailwind CSS chat bubble component' src={message.sender.profilePic} />
         </div>
       </div>
-      <div className={`chat-bubble text-white ${avatarColor} pb-2`}>{message.text}</div>
+      <div className={`chat-bubble text-white ${avatarColor} pb-2`}>{message.text}{message.file}</div>
       <div className='chat-footer opacity-50 text-xs flex gap-1 items-center text-gray-300'>{formattedTime(message.createdAt)}</div>
     </div>
   );

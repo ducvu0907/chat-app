@@ -8,7 +8,8 @@ import getUsers from "../controllers/getUsers.js";
 import sendMessageToConversation from "../controllers/sendMessageToConversation.js";
 import sendMessageToUser from "../controllers/sendMessageToUser.js";
 import verifyToken from "../middlewares/verifyToken.js";
-const upload = multer({ dest: "../uploads" });
+import getConversationByUserId from "../controllers/getConversationByUserId.js";
+const upload = multer({ dest: "./uploads" });
 const router = express.Router();
 
 // auth routes
@@ -22,10 +23,11 @@ router.get("/users", verifyToken, getUsers);
 // conversation routes
 router.get("/conversations", verifyToken, getConversations);
 router.get("/conversations/:conversationId", verifyToken, getConversationById);
+router.get("/conversations/user/:receiverId", verifyToken, getConversationByUserId);
 
 // message routes
 router.get("/messages/:conversationId", verifyToken, getMessages);
-router.post("/messages/conversation/:conversationId", verifyToken, upload.single("image"), sendMessageToConversation);
-router.post("/messages/user/:receiverId", verifyToken, upload.single("image"), sendMessageToUser);
+router.post("/messages/conversation/:conversationId", verifyToken, upload.single("file"), sendMessageToConversation);
+router.post("/messages/user/:receiverId", verifyToken, upload.single("file"), sendMessageToUser);
 
 export default router;

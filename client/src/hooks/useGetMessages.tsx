@@ -29,7 +29,7 @@ export default function useGetMessages() {
     if (selectedConversation?._id) {
       getMessages();
     }
-  }, [selectedConversation, messages.length]);
+  }, [selectedConversation]);
 
   return { loading, messages };
 }
