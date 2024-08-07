@@ -1,7 +1,6 @@
 import MessageModel from "../models/message.js";
 import ConversationModel from "../models/conversation.js";
-import sharp from "sharp";
-import path from "path";
+import { getUserSocket, io } from "../socket/server.js";
 
 export default async function sendMessageToConversation(req, res) {
   try {
@@ -24,6 +23,13 @@ export default async function sendMessageToConversation(req, res) {
     });
     conversation.messages.push(message._id);
     await Promise.all([message.save(), conversation.save()]);
+    let participantsSocket = [];
+    conversation.participants.forEach(id => {
+      if (getUserSocket[id]) {
+        participantsSocket.push(getUserSocket[id]);
+      }
+    });
+    io.to(participantsSocket).emit("message", message);
     res.status(201).json(message);
 
   } catch (error) {

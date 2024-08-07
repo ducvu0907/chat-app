@@ -1,10 +1,12 @@
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { ConversationContext } from "../contexts/ConversationContext";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function useSendMessage() {
   const [loading, setLoading] = useState<boolean>(false);
   const { selectedConversation } = useContext(ConversationContext);
+  const { authUser } = useContext(AuthContext);
 
   const sendMessage = async (text: string, file: File | null) => {
     setLoading(true);
@@ -14,7 +16,15 @@ export default function useSendMessage() {
       if (file) {
         formData.append("file", file);
       }
-      const res = await fetch(`api/messages/conversation/${selectedConversation?._id}`, {
+      let api;
+      if (selectedConversation?.isGroup && !selectedConversation?.messages) {
+        const receiverId = selectedConversation.participants[0].equals(authUser._id) ? selectedConversation.participants[1] : selectedConversation.participants[0];
+        api = `api/messages/user/${receiverId}`;
+      } else {
+        api = `api/messages/conversation/${selectedConversation?._id}`;
+      }
+
+      const res = await fetch(api, {
         method: "POST",
         body: formData,
       });

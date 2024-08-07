@@ -5,19 +5,14 @@ export default async function getConversationByUserId(req, res) {
     const currentUserId = req.user._id;
     const otherUserId = req.params.receiverId;
     let conversation = await ConversationModel.findOne({
-      "$expr": {
-        "$setEquals": [
-          "$participants",
-          [currentUserId, otherUserId]
-        ]
-      }
+      participants: [currentUserId, otherUserId].sort(),
+      isGroup: false,
     });
     if (!conversation) {
       conversation = await ConversationModel.create({
-        participants: [currentUserId, otherUserId],
+        participants: [currentUserId, otherUserId].sort(),
         isGroup: false,
       });
-      conversation.save();
     }
     res.status(200).json(conversation);
 

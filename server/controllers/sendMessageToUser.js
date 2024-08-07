@@ -1,6 +1,7 @@
 import MessageModel from "../models/message.js";
 import ConversationModel from "../models/conversation.js";
 import UserModel from "../models/user.js";
+import { getUserSocket, io } from "../socket/server.js";
 
 // FIXME: handle sending files in the message
 export default async function sendMessageToUser(req, res) {
@@ -18,13 +19,13 @@ export default async function sendMessageToUser(req, res) {
     }
 
     let conversation = await ConversationModel.findOne({
-      participants: [userId, receiverId],
+      participants: [userId, receiverId].sort(),
       isGroup: false,
     });
 
     if (!conversation) {
       conversation = await ConversationModel.create({
-        participants: [userId, receiverId],
+        participants: [userId, receiverId].sort(),
         isGroup: false,
       });
       user.conversations.push(conversation._id);
@@ -38,6 +39,10 @@ export default async function sendMessageToUser(req, res) {
     });
     conversation.messages.push(message._id);
     await Promise.all([message.save(), conversation.save(), user.save(), receiver.save()]);
+    const receiverSocket = getUserSocket[receiverId];
+    if (receiverSocket) {
+      io.to(receiverSocket).emit("message", message);
+    }
     res.status(201).json(message);
 
   } catch (error) {
