@@ -1,6 +1,5 @@
 import UserModel from "../models/user.js";
 
-// template controller for friends feature
 export default async function getUsers(req, res) {
   try {
     const userId = req.user._id;

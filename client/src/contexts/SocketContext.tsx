@@ -16,7 +16,7 @@ export function SocketContextProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (authUser) {
-      const socket = io("http://localhost:5000", {
+      const socket = io("/api", {
         query: {
           userId: authUser._id,
         },

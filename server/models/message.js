@@ -9,7 +9,9 @@ const messageSchema = new mongoose.Schema({
     type: String,
   },
   file: {
-    type: String,
+    url: { type: String },
+    name: { type: String },
+    type: { type: String },
   },
   seen: [
     {

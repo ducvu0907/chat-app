@@ -8,7 +8,7 @@ export default function Messages() {
 
   useEffect(() => {
     setTimeout(() => {
-      lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 10);
   }, [messages]);
 

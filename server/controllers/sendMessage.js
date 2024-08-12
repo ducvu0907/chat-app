@@ -2,13 +2,17 @@ import MessageModel from "../models/message.js";
 import ConversationModel from "../models/conversation.js";
 import { getUserSocket, io } from "../socket/server.js";
 
-export default async function sendMessageToConversation(req, res) {
+export default async function sendMessage(req, res) {
   try {
     const userId = req.user._id;
     const conversationId = req.params.conversationId;
     const { text } = req.body;
-    // FIXME: fix file format
-    const file = req.file ? req.file.path : null;
+    const file = req.file;
+    const fileData = file ? {
+      url: `/uploads/${file.filename}`,
+      name: file.originalname,
+      type: file.mimetype
+    } : null;
 
     const conversation = await ConversationModel.findById(conversationId);
     if (!conversation) {
@@ -19,17 +23,17 @@ export default async function sendMessageToConversation(req, res) {
     const message = new MessageModel({
       sender: userId,
       text: text,
-      file: file,
+      file: fileData,
     });
     conversation.messages.push(message._id);
     await Promise.all([message.save(), conversation.save()]);
-    let participantsSocket = [];
+    let participantSockets = [];
     conversation.participants.forEach(id => {
       if (getUserSocket[id]) {
-        participantsSocket.push(getUserSocket[id]);
+        participantSockets.push(getUserSocket[id]);
       }
     });
-    io.to(participantsSocket).emit("message", message);
+    io.to(participantSockets).emit("message", message);
     res.status(201).json(message);
 
   } catch (error) {

@@ -35,7 +35,7 @@ export default function MessageInput() {
           <MdAttachFile className='text-gray-200 cursor-pointer' size={21} />
           <input
             type='file'
-            accept=".png, .jpeg"
+            accept=".png, .jpeg, .pdf"
             className='hidden'
             onChange={handleFileChange}
           />

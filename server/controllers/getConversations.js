@@ -26,7 +26,7 @@ export default async function getConversations(req, res) {
         error: "invalid user"
       });
     }
-    const conversations = user.conversations;
+    const conversations = user.conversations.filter(c => c.messages);
     res.status(200).json(conversations);
 
   } catch (error) {
