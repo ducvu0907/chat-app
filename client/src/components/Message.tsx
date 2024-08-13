@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { FaFile } from "react-icons/fa";
 
 export default function Message({ message }) {
   const { authUser } = useContext(AuthContext);
   const messagePosition = message.sender._id === authUser?._id ? "chat-end" : "chat-start";
   const avatarColor = message.sender._id === authUser?._id ? "bg-blue-500" : "";
+  const [showTime, setShowTime] = useState(false);
 
   const formattedTime = (date: Date) => {
     let hours = String(new Date(date).getHours());
@@ -34,6 +36,7 @@ export default function Message({ message }) {
     } else {
       return (
         <a href={source} className="text-red-300 underline" download>
+          <span><FaFile className="inline mr-2" /></span>
           {message.file.name || "download file"}
         </a>
       )
@@ -44,7 +47,7 @@ export default function Message({ message }) {
     return (
       <>
         {message.text && <div>{message.text}</div>}
-        {message.file && <div>{messageFile()}</div>}
+        {message.file && <div onClick={(e) => e.stopPropagation()}>{messageFile()}</div>}
       </>
     );
   };
@@ -56,10 +59,10 @@ export default function Message({ message }) {
           <img alt='sender profile picture' src={message.sender.profilePic} />
         </div>
       </div>
-      <div className={`chat-bubble text-white ${avatarColor} pb-2`}>
+      <div className={`chat-bubble text-white ${avatarColor} pb-2 cursor-pointer`} onClick={() => setShowTime(!showTime)}>
         {messageContent()}
       </div>
-      <div className='chat-footer opacity-50 text-xs flex gap-1 items-center text-gray-300'>{formattedTime(message.createdAt)}</div>
+      {showTime && <span className='chat-footer opacity-50 text-xs flex gap-1 items-center text-gray-300'>{formattedTime(message.createdAt)}</span>}
     </div>
   );
 };

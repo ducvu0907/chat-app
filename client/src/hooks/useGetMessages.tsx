@@ -17,7 +17,6 @@ export default function useGetMessages() {
           throw new Error(data.message);
         }
         setMessages(data);
-        console.log(data);
 
       } catch (error) {
         toast.error((error as Error).message);
