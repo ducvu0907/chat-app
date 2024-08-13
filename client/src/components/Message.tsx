@@ -56,7 +56,7 @@ export default function Message({ message }) {
     <div className={`chat ${messagePosition}`}>
       <div className='chat-image avatar'>
         <div className='w-10 rounded-full'>
-          <img alt='sender profile picture' src={message.sender.profilePic} />
+          <img alt='profile picture' src={message.sender.profilePic} />
         </div>
       </div>
       <div className={`chat-bubble text-white ${avatarColor} pb-2 cursor-pointer`} onClick={() => setShowTime(!showTime)}>

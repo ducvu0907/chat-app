@@ -14,9 +14,8 @@ export default async function getConversations(req, res) {
           path: "messages",
           populate: {
             path: "sender",
-            select: "name email"
+            select: "name profilePic"
           },
-          select: "content createdAt"
         }
       ]
     }).exec();

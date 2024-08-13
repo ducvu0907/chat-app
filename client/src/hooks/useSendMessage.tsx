@@ -4,7 +4,7 @@ import { ConversationContext } from "../contexts/ConversationContext";
 
 export default function useSendMessage() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { selectedConversation } = useContext(ConversationContext);
+  const { selectedConversation, setSelectedConversation } = useContext(ConversationContext);
 
   const sendMessage = async (text: string, file: File | null) => {
     setLoading(true);
@@ -22,6 +22,8 @@ export default function useSendMessage() {
       if (data.error) {
         throw new Error(data.error);
       }
+      selectedConversation?.messages.push(data);
+      setSelectedConversation({ ...selectedConversation });
       toast.success("message sent successfully");
 
     } catch (error) {

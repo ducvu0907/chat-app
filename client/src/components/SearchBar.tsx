@@ -18,7 +18,6 @@ export default function SearchBar({ defaultUsers }) {
     if (!searchQuery) {
       return;
     }
-    console.log(defaultUsers);
     const filteredUsers = defaultUsers.filter(user => user.name.toLowerCase().includes(searchQuery));
     setUsers(filteredUsers);
   };

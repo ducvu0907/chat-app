@@ -14,7 +14,6 @@ export default function useGetConversation() {
       if (data.error) {
         throw new Error(data.error);
       }
-      console.log(data);
       setSelectedConversation(data);
 
     } catch (error) {

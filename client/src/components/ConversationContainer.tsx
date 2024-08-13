@@ -16,9 +16,8 @@ export default function ConversationContainer() {
           <div className='bg-slate-300 px-4 py-2'>
             <span className='text-black font-bold'>
               {selectedConversation.isGroup ? selectedConversation.name :
-                (selectedConversation.participants.length === 1 ? selectedConversation.participants[0].name :
-                  (selectedConversation.participants[0].name === authUser?.name ? selectedConversation.participants[1].name :
-                    authUser?.name))}
+                (selectedConversation.participants.length === 1 ? authUser?.name :
+                  (selectedConversation.participants[0]._id === authUser._id) ? selectedConversation.participants[1].name : selectedConversation.participants[0].name)}
             </span>
           </div>
           <Messages />

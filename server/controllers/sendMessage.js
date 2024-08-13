@@ -33,6 +33,10 @@ export default async function sendMessage(req, res) {
         participantSockets.push(getUserSocket[id]);
       }
     });
+    await message.populate({
+      path: "sender",
+      select: "name profilePic",
+    });
     io.to(participantSockets).emit("message", message);
     res.status(201).json(message);
 

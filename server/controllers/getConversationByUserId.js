@@ -27,10 +27,19 @@ export default async function getConversationByUserId(req, res) {
         }
       }));
     }
-    await conversation.populate({
-      path: "participants",
-      select: "name profilePic"
-    });
+    await conversation.populate([
+      {
+        path: "participants",
+        select: "name profilePic"
+      },
+      {
+        path: "messages",
+        populate: {
+          path: "sender",
+          select: "name profilePic"
+        },
+      }
+    ])
 
     res.status(200).json(conversation);
 

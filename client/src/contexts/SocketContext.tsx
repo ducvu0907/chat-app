@@ -24,7 +24,6 @@ export function SocketContextProvider({ children }: { children: ReactNode }) {
       setSocket(socket);
       socket.on("getOnlineUsers", (users) => {
         setOnlineUsers(users);
-        console.log(users);
       });
 
     } else if (socket) {
