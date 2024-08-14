@@ -46,7 +46,7 @@ export default function Message({ message }) {
   const messageContent = () => {
     return (
       <>
-        {message.text && <div>{message.text}</div>}
+        {message.text && <div className="max-w-[250px] break-all">{message.text}</div>}
         {message.file && <div onClick={(e) => e.stopPropagation()}>{messageFile()}</div>}
       </>
     );
@@ -59,7 +59,7 @@ export default function Message({ message }) {
           <img alt='profile picture' src={message.sender.profilePic} />
         </div>
       </div>
-      <div className={`chat-bubble text-white ${avatarColor} pb-2 cursor-pointer`} onClick={() => setShowTime(!showTime)}>
+      <div className={`chat-bubble text-white ${avatarColor} pb-2 cursor-pointer ${showTime && "mt-2 bg-blue-900"}`} onClick={() => setShowTime(!showTime)}>
         {messageContent()}
       </div>
       {showTime && <span className='chat-footer opacity-50 text-xs flex gap-1 items-center text-gray-300'>{formattedTime(message.createdAt)}</span>}

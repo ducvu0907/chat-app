@@ -8,18 +8,20 @@ export default function UserStatus({ user }) {
   let isOnline = onlineUsers.includes(user._id);
 
   return (
-    <div className={`flex gap-2 items-center hover:bg-blue-800 p-2 py-1 cursor-pointer border-b-2 border-b-gray-400`} onClick={() => getConversationByUserId(user._id)} >
-      <div className={`avatar ${isOnline ? "online" : ""}`}>
-        <div className='w-10 rounded-full'>
-          <img src={user.profilePic} alt='user profile picture' />
+    <>
+      <div className={`flex gap-2 items-center hover:bg-blue-800 p-2 py-1 cursor-pointer border-b-2 border-b-gray-400`} onClick={() => getConversationByUserId(user._id)} >
+        <div className={`avatar ${isOnline ? "online" : ""}`}>
+          <div className='w-10 rounded-full'>
+            <img src={user.profilePic} alt='user profile picture' />
+          </div>
         </div>
-      </div>
 
-      <div className='flex flex-col flex-1'>
-        <div className='flex gap-3 justify-between'>
-          <p className='text-black'>{user.name} <span className="text-sm text-gray-500">#{user.email.split('@')[0]}</span></p>
+        <div className='flex flex-col w-[170px]'>
+          <div className='flex items-left p-2'>
+            <p className='text-black line-clamp-1'>{user.name}</p>
+          </div>
         </div>
-      </div>
-    </div >
+      </div >
+    </>
   )
 };

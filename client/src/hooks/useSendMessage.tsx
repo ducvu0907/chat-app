@@ -24,7 +24,6 @@ export default function useSendMessage() {
       }
       selectedConversation?.messages.push(data);
       setSelectedConversation({ ...selectedConversation });
-      toast.success("message sent successfully");
 
     } catch (error) {
       toast.error((error as Error).message);
