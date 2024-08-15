@@ -12,7 +12,20 @@ export default async function getConversationById(req, res) {
       });
     }
 
-    const conversation = await ConversationModel.findById(conversationId);
+    const conversation = await ConversationModel.findById(conversationId).populate([
+      {
+        path: "participants",
+        select: "name profilePic"
+      },
+      {
+        path: "messages",
+        populate: {
+          path: "sender",
+          select: "name profilePic"
+        },
+      }
+    ]);
+
     if (!conversation) {
       return res.status(400).json({
         error: "invalid conversation",

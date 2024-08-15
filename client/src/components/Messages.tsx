@@ -7,7 +7,7 @@ import { SocketContext } from "../contexts/SocketContext";
 export default function Messages() {
   // const { loading, messages } = useGetMessages();
   const lastMessageRef = useRef<HTMLDivElement>(null);
-  const { selectedConversation } = useContext(ConversationContext);
+  const { selectedConversation, setSelectedConversation } = useContext(ConversationContext);
   const [messages, setMessages] = useState([]);
   const { socket } = useContext(SocketContext);
 
@@ -20,7 +20,7 @@ export default function Messages() {
   // handle socket new message event
   useEffect(() => {
     socket?.on("message", (message) => {
-      setMessages([...messages, message]);
+      setSelectedConversation({ ...selectedConversation, messages: [...messages, message] });
     });
   }, [socket, messages]);
 

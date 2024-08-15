@@ -24,5 +24,23 @@ export default function useGetConversation() {
     }
   }
 
-  return { loading, getConversationByUserId };
+  const getConversationById = async (conversationId: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/conversations/${conversationId}`);
+      const data = await res.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setSelectedConversation(data);
+
+    } catch (error) {
+      toast.error((error as Error).message);
+
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { loading, getConversationByUserId, getConversationById };
 }
