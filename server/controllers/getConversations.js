@@ -25,7 +25,12 @@ export default async function getConversations(req, res) {
         error: "invalid user"
       });
     }
-    const conversations = user.conversations.filter(c => c.messages.length > 0);
+    // sort based on most recent message
+    const conversations = user.conversations.sort((a, b) => {
+      const dateA = a.messages.length > 0 ? new Date(a.messages.at(-1).createdAt) : new Date(0);
+      const dateB = b.messages.length > 0 ? new Date(b.messages.at(-1).createdAt) : new Date(0);
+      return dateB - dateA;
+    });
     res.status(200).json(conversations);
 
   } catch (error) {

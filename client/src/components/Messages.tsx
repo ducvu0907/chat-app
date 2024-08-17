@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from "react";
-// import useGetMessages from "../hooks/useGetMessages"
 import Message from "./Message";
 import { ConversationContext } from "../contexts/ConversationContext";
 import { SocketContext } from "../contexts/SocketContext";
@@ -17,18 +16,18 @@ export default function Messages() {
     }
   }, [selectedConversation]);
 
-  // handle socket new message event
   useEffect(() => {
-    socket?.on("message", (message) => {
-      setSelectedConversation({ ...selectedConversation, messages: [...messages, message] });
+    socket?.on("message", ({ message, conversationId }) => {
+      selectedConversation?._id === conversationId && setSelectedConversation({ ...selectedConversation, messages: [...messages, message] })
     });
+    return () => socket?.off("message");
   }, [socket, messages]);
 
   // scroll to last message when sending and receiving new message
   useEffect(() => {
     setTimeout(() => {
       lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+    }, 0);
   }, [selectedConversation, socket, messages]);
 
   // return (

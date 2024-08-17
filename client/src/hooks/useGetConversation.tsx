@@ -4,7 +4,7 @@ import { ConversationContext } from "../contexts/ConversationContext";
 
 export default function useGetConversation() {
   const [loading, setLoading] = useState(false);
-  const { setSelectedConversation } = useContext(ConversationContext);
+  const { selectedConversation, setSelectedConversation } = useContext(ConversationContext);
 
   const getConversationByUserId = async (receiverId: string) => {
     setLoading(true);

@@ -32,12 +32,6 @@ export default async function getConversationById(req, res) {
       });
     }
 
-    if (!conversation.participants.includes(userId)) {
-      return res.status(401).json({
-        error: "user not in conversation",
-      });
-    }
-
     res.status(200).json(conversation);
 
   } catch (error) {

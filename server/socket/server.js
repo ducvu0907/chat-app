@@ -12,8 +12,8 @@ const io = new Server(server, {
 });
 
 const userSocket = {};
-export function getUserSocket(userId) {
-  return userSocket[userId];
+export function getUserSocketId(id) {
+  return userSocket[id];
 }
 
 io.on("connection", (socket) => {
@@ -27,7 +27,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`user disconnected ${socket.id}`);
     if (socket.userId) {
-      delete userSocket[socket.userId];
+      delete userSocket[socket.id];
     }
     io.emit("getOnlineUsers", Object.keys(userSocket));
   });
