@@ -29,6 +29,7 @@ export default async function sendMessage(req, res) {
     let participantSocketIds = conversation.participants
       .filter(id => !id.equals(userId) && getUserSocketId(id))
       .map(id => getUserSocketId(id.toString()))
+
     await message.populate({
       path: "sender",
       select: "name profilePic",

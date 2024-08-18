@@ -8,7 +8,6 @@ export default function Sidebar() {
   const { loading, conversations } = useGetConversations();
   const { authUser } = useContext(AuthContext);
 
-  // FIXME: handle receiving new message
   return (
     <div className="w-[30%] h-full border-r border-slate-600 p-4 flex flex-col bg-slate-800">
       {loading ? <span className="loading loading-spinner"></span> :

@@ -2,6 +2,7 @@ import ConversationContainer from "../components/ConversationContainer"
 import Sidebar from "../components/Sidebar"
 import UsersBar from "../components/UsersBar"
 import { ConversationContextProvider } from "../contexts/ConversationContext"
+import { ConversationsContextProvider } from "../contexts/ConversationsContext"
 import { SocketContextProvider } from "../contexts/SocketContext"
 import { UsersContextProvider } from "../contexts/UsersContext"
 

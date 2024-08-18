@@ -13,7 +13,7 @@ export default function SideConversation({ conversation }) {
   const conversationPicture = conversation.isGroup ? conversation.picture : (isMonologue ? authUser?.profilePic : conversation.participants.filter(p => p.name !== authUser?.name)[0].profilePic);
   const lastMessage = conversation.messages.at(-1);
   const lastMessageSnippet = lastMessage.text ? lastMessage.text : `sent an ${lastMessage.file?.type.startsWith("image/") ? "image" : "attachment"}`;
-  const senderName = lastMessage.sender.name;
+  const senderName = lastMessage.sender._id === authUser?._id ? "you" : lastMessage.sender.name;
 
   return (
     <>
