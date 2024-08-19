@@ -23,7 +23,7 @@ export default function ConversationContainer() {
         </span>}
       </div>
       <Messages />
-      <MessageInput />
+      {selectedConversation && <MessageInput />}
     </div>
   );
 }

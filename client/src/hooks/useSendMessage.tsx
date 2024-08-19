@@ -1,10 +1,12 @@
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { ConversationContext } from "../contexts/ConversationContext";
+import { ConversationsContext } from "../contexts/ConversationsContext";
 
 export default function useSendMessage() {
   const [loading, setLoading] = useState<boolean>(false);
   const { selectedConversation, setSelectedConversation } = useContext(ConversationContext);
+  const { setConversations } = useContext(ConversationsContext);
 
   const sendMessage = async (text: string, file: File | null) => {
     setLoading(true);
@@ -24,6 +26,9 @@ export default function useSendMessage() {
       }
       selectedConversation?.messages.push(data);
       setSelectedConversation({ ...selectedConversation });
+      setConversations(prevConvs => prevConvs.map(conv => conv._id === selectedConversation?._id ?
+        { ...conv, messages: [...conv.messages, data] } : conv)
+      );
 
     } catch (error) {
       toast.error((error as Error).message);

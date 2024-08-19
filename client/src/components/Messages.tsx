@@ -2,15 +2,15 @@ import { useContext, useEffect, useRef, useState } from "react";
 import Message from "./Message";
 import { ConversationContext } from "../contexts/ConversationContext";
 import { SocketContext } from "../contexts/SocketContext";
-import useGetConversations from "../hooks/useGetConversations";
 import EmptyConversation from "./EmptyConversation";
+import { ConversationsContext } from "../contexts/ConversationsContext";
 
 export default function Messages() {
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const { selectedConversation, setSelectedConversation } = useContext(ConversationContext);
   const [messages, setMessages] = useState([]);
   const { socket } = useContext(SocketContext);
-  const { setConversations } = useGetConversations();
+  const { setConversations } = useContext(ConversationsContext);
 
   useEffect(() => {
     if (selectedConversation) {
@@ -21,13 +21,13 @@ export default function Messages() {
   useEffect(() => {
     socket?.on("message", ({ message, conversationId }) => {
       console.log(`receive ${message._id} in ${conversationId}`);
-      selectedConversation?._id === conversationId && setSelectedConversation({ ...selectedConversation, messages: [...messages, message] })
-      console.log(message);
+      if (selectedConversation?._id === conversationId) {
+        setSelectedConversation({ ...selectedConversation, messages: [...messages, message] });
+      }
       // FIXME: update sidebar messages
       setConversations(prevConvs => prevConvs.map(conv => conv._id === conversationId ?
         { ...conv, messages: [...conv.messages, message] } : conv)
       );
-      console.log(conversations);
     });
     return () => socket?.off("message");
   }, [socket, messages]);

@@ -11,11 +11,13 @@ export default function Home() {
     <ConversationContextProvider>
       <SocketContextProvider>
         <UsersContextProvider>
-          <div className="w-full h-full flex">
-            <Sidebar />
-            <ConversationContainer />
-            <UsersBar />
-          </div>
+          <ConversationsContextProvider>
+            <div className="w-full h-full flex">
+              <Sidebar />
+              <ConversationContainer />
+              <UsersBar />
+            </div>
+          </ConversationsContextProvider>
         </UsersContextProvider>
       </SocketContextProvider>
     </ConversationContextProvider>
