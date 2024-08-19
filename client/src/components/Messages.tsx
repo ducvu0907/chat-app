@@ -24,7 +24,6 @@ export default function Messages() {
       if (selectedConversation?._id === conversationId) {
         setSelectedConversation({ ...selectedConversation, messages: [...messages, message] });
       }
-      // FIXME: update sidebar messages
       setConversations(prevConvs => prevConvs.map(conv => conv._id === conversationId ?
         { ...conv, messages: [...conv.messages, message] } : conv)
       );

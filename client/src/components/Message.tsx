@@ -24,7 +24,9 @@ export default function Message({ message }) {
     if (!message.file) {
       return null;
     }
-    const source = `server${message.file.url}`;
+    console.log(message.file.name);
+    const source = `http://localhost:5000/static/${message.file.name}`;
+    console.log(source);
     if (message.file.type.startsWith("image/")) {
       return (
         <img src={source} alt="image" className="w-32 h-32 object-cover rounded" />
@@ -59,10 +61,13 @@ export default function Message({ message }) {
           <img alt='profile picture' src={message.sender.profilePic} />
         </div>
       </div>
-      <div className={`chat-bubble text-white ${avatarColor} pb-2 cursor-pointer ${showTime && "mt-2 bg-gray-500"}`} onClick={() => setShowTime(!showTime)}>
+      <div className={`chat-bubble text-white ${avatarColor} pb-2 cursor-pointer ${showTime && "mt-2 bg-gray-500"}`}
+        onClick={() => setShowTime(!showTime)}>
         {messageContent()}
       </div>
-      {showTime && <span className='chat-footer opacity-50 text-xs flex gap-1 items-center text-gray-300'>{formattedTime(message.createdAt)}</span>}
+      {showTime && <span className='chat-footer opacity-50 text-xs flex gap-1 items-center text-gray-300'>
+        {formattedTime(message.createdAt)}
+      </span>}
     </div>
   );
 };

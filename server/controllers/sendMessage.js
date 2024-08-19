@@ -8,7 +8,6 @@ export default async function sendMessage(req, res) {
     const conversationId = req.params.conversationId;
     const { text } = req.body;
     const file = req.file ? {
-      url: `/uploads/${req.file.filename}`,
       name: req.file.originalname,
       type: req.file.mimetype
     } : null;
