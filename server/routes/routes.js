@@ -8,7 +8,6 @@ import getUsers from "../controllers/getUsers.js";
 import sendMessage from "../controllers/sendMessage.js";
 import verifyToken from "../middlewares/verifyToken.js";
 import getConversationByUserId from "../controllers/getConversationByUserId.js";
-import path from "path";
 // setup uploads storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

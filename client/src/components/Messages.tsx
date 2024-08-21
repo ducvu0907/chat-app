@@ -18,20 +18,29 @@ export default function Messages() {
     }
   }, [selectedConversation]);
 
+  // update components upon receiving new message
   useEffect(() => {
-    socket?.on("message", ({ message, conversationId }) => {
-      console.log(`receive ${message._id} in ${conversationId}`);
-      if (selectedConversation?._id === conversationId) {
+    socket?.on("message", ({ message, conversation }) => {
+      console.log(`receive ${message._id} in ${conversation._id}`);
+      if (selectedConversation?._id === conversation._id) {
         setSelectedConversation({ ...selectedConversation, messages: [...messages, message] });
       }
-      setConversations(prevConvs => prevConvs.map(conv => conv._id === conversationId ?
-        { ...conv, messages: [...conv.messages, message] } : conv)
-      );
+      // insert if new conversation otherwise update existing one
+      setConversations(prevConvs => {
+        const existingConversation = prevConvs.find(conv => conv._id === conversation._id);
+        if (existingConversation) {
+          return prevConvs.map(conv => conv._id === conversation._id ?
+            { ...conv, messages: [...conv.messages, message] } : conv
+          );
+        } else {
+          return [{ ...conversation }, ...prevConvs];
+        }
+      });
     });
     return () => socket?.off("message");
   }, [socket, messages]);
 
-  // scroll down
+  // scroll to the last message
   useEffect(() => {
     setTimeout(() => {
       lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });

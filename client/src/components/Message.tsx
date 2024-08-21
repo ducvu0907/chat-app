@@ -37,7 +37,7 @@ export default function Message({ message }) {
       )
     } else {
       return (
-        <a href={source} className="text-red-300 underline" download>
+        <a href={source} target="_blank" className="text-red-300 underline" download>
           <span><FaFile className="inline mr-2" /></span>
           {message.file.name || "download file"}
         </a>

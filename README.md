@@ -1,1 +1,1 @@
-# A toy chat application built for learning
+# A toy chat application
