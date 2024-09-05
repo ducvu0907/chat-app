@@ -73,7 +73,6 @@ export default function Signup() {
               className='bg-slate-100 px-2 py-1 focus:outline-primary'
               value={info.password}
               onChange={handleOnChange}
-              minLength={6}
               required
             />
           </div>

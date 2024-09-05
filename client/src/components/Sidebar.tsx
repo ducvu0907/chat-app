@@ -3,6 +3,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import SideConversation from './SideConverstation';
 import { useContext } from 'react';
 import useGetConversations from '../hooks/useGetConversations';
+import { FaUsers } from 'react-icons/fa';
 
 export default function Sidebar() {
   const { loading, conversations } = useGetConversations();
@@ -12,7 +13,12 @@ export default function Sidebar() {
     <div className="w-[30%] h-full border-r border-slate-600 p-4 flex flex-col bg-slate-800">
       {loading ? <span className="loading loading-spinner"></span> :
         <div className="w-full h-full bg-slate-600 rounded-md overflow-auto">
-          <h2 className="text-center text-xl my-2 font-semibold">Messages</h2>
+          <div className="flex justify-center mb-4">
+            <button className="p-2 rounded-full bg-slate-700 text-white m-1">
+              <FaUsers size={24} />
+            </button>
+          </div>
+          <h2 className="text-center text-xl mb-2 font-semibold">Messages</h2>
           {conversations.map((conversation, idx) => conversation.messages.length > 0
             && <SideConversation key={idx} conversation={conversation} />)}
         </div>

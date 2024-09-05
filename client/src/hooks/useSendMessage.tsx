@@ -26,8 +26,8 @@ export default function useSendMessage() {
       }
       selectedConversation?.messages.push(data);
       setSelectedConversation({ ...selectedConversation });
-      setConversations(prevConvs => prevConvs.map(conv => conv._id === selectedConversation?._id ?
-        { ...conv, messages: [...conv.messages, data] } : conv)
+      setConversations(prevConvs => [selectedConversation, ...prevConvs
+        .filter(conv => conv._id !== selectedConversation?._id)]
       );
 
     } catch (error) {

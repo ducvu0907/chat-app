@@ -2,12 +2,14 @@ import ConversationModel from "../models/conversation.js";
 
 export default async function createGroupConversation(req, res) {
   try {
-    const { name, participants } = req.body; // participants should contain userId already
+    const { name, participants } = req.body; // participants also should contain userId
+
     const conversation = await ConversationModel.create({
       name: name,
       participants: participants,
       isGroup: true,
     });
+
     await Promise.all(participants.map(async (id) => {
       const user = await UserModel.findById(id);
       if (user && !user.conversations.includes(conversation._id)) {
@@ -15,6 +17,7 @@ export default async function createGroupConversation(req, res) {
         await user.save();
       }
     }));
+
     res.status(201).json(conversation);
 
   } catch (error) {

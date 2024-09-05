@@ -12,7 +12,7 @@ const io = new Server(server, {
 });
 
 const userSocket = {};
-export function getUserSocketId(id) {
+function getUserSocketId(id) {
   return userSocket[id];
 }
 
@@ -23,14 +23,45 @@ io.on("connection", (socket) => {
     userSocket[userId] = socket.id;
     socket.userId = userId;
   }
+
   io.emit("getOnlineUsers", Object.keys(userSocket));
+
   socket.on("disconnect", () => {
     console.log(`user disconnected ${socket.id}`);
     if (socket.userId) {
-      delete userSocket[socket.id];
+      delete userSocket[socket.userId];
     }
     io.emit("getOnlineUsers", Object.keys(userSocket));
   });
+
+  // TODO: handle video calling events
+  socket.on("callUser", (data) => {
+    io.to(data.to).emit("callMade", {
+      offer: data.offer,
+      socket: socket.id,
+    });
+  });
+
+  socket.on("acceptCall", (data) => {
+    io.to(data.to).emit("answerMade", {
+      answer: data.answer,
+      socket: socket.id,
+    });
+  });
+
+  socket.on("rejectCall", (data) => {
+    io.to(data.to).emit("callRejected", {
+      socket: socket.id,
+    });
+  });
+
+  socket.on("iceCandidate", (data) => {
+    io.to(data.to).emit("iceCandidatePosted", {
+      candidate: data.candidate,
+      socket: socket.id,
+    });
+  });
+
 });
 
-export { app, server, io };
+export { app, server, io, getUserSocketId };

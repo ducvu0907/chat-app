@@ -10,18 +10,22 @@ export default function ConversationContainer() {
 
   return (
     <div className='w-full flex flex-col bg-gray-700'>
-      <div className='bg-slate-300 px-4 py-2'>
-        {selectedConversation && <img className="inline p-0 mr-2" src={selectedConversation?.isGroup ? selectedConversation?.picture :
-          (selectedConversation?.participants.length === 1 ? authUser?.profilePic :
-            (selectedConversation?.participants[0]._id === authUser._id) ? selectedConversation?.participants[1].profilePic : selectedConversation?.participants[0].profilePic)}
-          width={"30px"} height={"30px"}
-        />}
-        {selectedConversation && <span className='text-black font-bold'>
-          {selectedConversation?.isGroup ? selectedConversation?.name :
-            (selectedConversation?.participants.length === 1 ? authUser?.name :
-              (selectedConversation?.participants[0]._id === authUser?._id) ? selectedConversation?.participants[1].name : selectedConversation?.participants[0].name)}
-        </span>}
-      </div>
+      {selectedConversation &&
+        <div className='bg-slate-300 px-4 py-2'>
+          <img className="inline p-0 mr-2" src={selectedConversation?.isGroup ? selectedConversation?.picture :
+            (selectedConversation?.participants.length === 1 ? authUser?.profilePic :
+              (selectedConversation?.participants[0]._id === authUser._id) ?
+                selectedConversation?.participants[1].profilePic :
+                selectedConversation?.participants[0].profilePic)}
+            width={"45px"} height={"45px"}
+          />
+          <span className='text-black font-bold'>
+            {selectedConversation?.isGroup ? selectedConversation?.name :
+              (selectedConversation?.participants.length === 1 ? authUser?.name :
+                (selectedConversation?.participants[0]._id === authUser?._id) ? selectedConversation?.participants[1].name : selectedConversation?.participants[0].name)}
+          </span>
+        </div>
+      }
       <Messages />
       {selectedConversation && <MessageInput />}
     </div>

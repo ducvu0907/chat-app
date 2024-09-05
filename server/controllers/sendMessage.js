@@ -50,7 +50,6 @@ export default async function sendMessage(req, res) {
         }
       ]),
     ]);
-    console.log(conversation);
 
     // broadcast to all participants except for the sender
     participantSocketIds.forEach(socketId => {
@@ -60,7 +59,7 @@ export default async function sendMessage(req, res) {
     res.status(201).json(message);
 
   } catch (error) {
-    console.log("server error while sending message");
+    console.log("server error while sending messagee");
     res.status(500).json({
       error: error.message,
     });

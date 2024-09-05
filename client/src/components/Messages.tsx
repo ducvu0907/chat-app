@@ -18,26 +18,27 @@ export default function Messages() {
     }
   }, [selectedConversation]);
 
-  // update components upon receiving new message
   useEffect(() => {
+    // update new message
     socket?.on("message", ({ message, conversation }) => {
-      console.log(`receive ${message._id} in ${conversation._id}`);
       if (selectedConversation?._id === conversation._id) {
         setSelectedConversation({ ...selectedConversation, messages: [...messages, message] });
       }
       // insert if new conversation otherwise update existing one
-      setConversations(prevConvs => {
-        const existingConversation = prevConvs.find(conv => conv._id === conversation._id);
-        if (existingConversation) {
-          return prevConvs.map(conv => conv._id === conversation._id ?
-            { ...conv, messages: [...conv.messages, message] } : conv
-          );
-        } else {
-          return [{ ...conversation }, ...prevConvs];
-        }
-      });
+      setConversations(prevConvs => [conversation, ...prevConvs
+        .filter(conv => conv._id !== conversation._id)]
+      );
     });
-    return () => socket?.off("message");
+
+    // TODO: update message seen list
+    socket?.on("read", ({ user, conversation }) => {
+
+    });
+
+    return () => {
+      socket?.off("message");
+      socket?.off("read");
+    }
   }, [socket, messages]);
 
   // scroll to the last message
