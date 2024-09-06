@@ -11,7 +11,7 @@ export default function Message({ message }) {
   const [showTime, setShowTime] = useState(false);
   const [modelImageSrc, setModelImageSrc] = useState("");
 
-  const formattedTime = (date: Date) => {
+  const messageTimestamp = (date: Date) => {
     let hours = String(new Date(date).getHours());
     let minutes = String(new Date(date).getMinutes());
     if (parseInt(hours) < 10) {
@@ -20,7 +20,7 @@ export default function Message({ message }) {
     if (parseInt(minutes) < 10) {
       minutes = 0 + minutes;
     }
-    return `${hours}:${minutes}`;
+    return `sent at ${hours}:${minutes}`;
   };
 
   const ImageModal = () => {
@@ -81,7 +81,7 @@ export default function Message({ message }) {
         {messageContent()}
       </div>
       {showTime && <span className='chat-footer opacity-50 text-xs flex gap-1 items-center text-gray-300'>
-        {formattedTime(message.createdAt)}
+        {messageTimestamp(message.createdAt)}
       </span>}
       {modelImageSrc && <ImageModal />}
     </div>

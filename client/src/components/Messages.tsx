@@ -24,17 +24,19 @@ export default function Messages() {
   }, [selectedConversation]);
 
   useEffect(() => {
-    // update receiving new message
+    // update new message
     socket?.on("message", ({ message, conversation }) => {
       if (selectedConversation?._id === conversation._id) {
         // setSelectedConversation({ ...selectedConversation, messages: [...messages, message] });
         // setLastMessageSeen([...message.seen, authUser]);
-        getConversationById(conversation._id); // refetch for simplicity
+        getConversationById(conversation._id); // refetch - might change later
+        conversation.messages.at(-1).seen.push(authUser);
       }
       // update sidebar
       setConversations(prevConvs => [conversation, ...prevConvs
         .filter(conv => conv._id !== conversation._id)]
       );
+
     });
 
     // update last message seen
@@ -59,6 +61,7 @@ export default function Messages() {
     setTimeout(() => {
       lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 0);
+
   }, [selectedConversation, socket, messages, lastMessageSeen]);
 
   return (

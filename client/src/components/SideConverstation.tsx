@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { ConversationContext } from "../contexts/ConversationContext";
 import { AuthContext } from "../contexts/AuthContext";
 import useGetConversation from "../hooks/useGetConversation";
@@ -14,13 +14,18 @@ export default function SideConversation({ conversation }) {
   const lastMessage = conversation.messages.at(-1);
   const lastMessageSnippet = lastMessage.text ? `: ${lastMessage.text}` : ` sent an ${lastMessage.file?.type.startsWith("image/") ? "image" : "attachment"}`;
   const senderName = lastMessage.sender._id === authUser?._id ? "you" : lastMessage.sender.name;
-  const isRead = selectedConversation?._id === conversation._id || conversation.messages?.at(-1).seen.includes(authUser?._id);
+  const isRead = conversation.messages.at(-1).seen.find(user => user._id === authUser?._id);
+
+  const handleReadConversation = async () => {
+    conversation.messages.at(-1).seen.push(authUser);
+    await getConversationById(conversation._id);
+  };
 
   return (
     <>
       <div className={`flex gap-2 items-center hover:bg-blue-800 p-2 py-1 cursor-pointer 
       ${isSelected && "bg-sky-300"} ${!isRead && "bg-white font-bold"} border-b-2 border-gray-400`}
-        onClick={() => getConversationById(conversation._id)} >
+        onClick={handleReadConversation} >
         <div className={`avatar`}>
           <div className='w-10 h-10 rounded-full overflow-hidden'>
             <img src={conversationPicture} alt='user avatar' className="object-cover w-full h-full" />

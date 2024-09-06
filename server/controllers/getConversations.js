@@ -12,13 +12,19 @@ export default async function getConversations(req, res) {
         },
         {
           path: "messages",
-          populate: {
-            path: "sender",
-            select: "name profilePic"
-          },
+          populate: [
+            {
+              path: "sender",
+              select: "name profilePic"
+            },
+            {
+              path: "seen",
+              select: "name profilePic"
+            }
+          ],
         }
       ]
-    }).exec();
+    });
 
     if (!user) {
       res.status(400).json({
@@ -31,6 +37,7 @@ export default async function getConversations(req, res) {
       const dateB = b.messages.length > 0 ? new Date(b.messages.at(-1).createdAt) : new Date(0);
       return dateB - dateA;
     });
+
     res.status(200).json(conversations);
 
   } catch (error) {

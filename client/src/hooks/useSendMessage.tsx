@@ -16,16 +16,20 @@ export default function useSendMessage() {
       if (file) {
         formData.append("file", file);
       }
+
       const res = await fetch(`/api/messages/conversation/${selectedConversation?._id}`, {
         method: "POST",
         body: formData,
       });
+
       const data = await res.json();
       if (data.error) {
         throw new Error(data.error);
       }
+
       selectedConversation?.messages.push(data);
       setSelectedConversation({ ...selectedConversation });
+
       setConversations(prevConvs => [selectedConversation, ...prevConvs
         .filter(conv => conv._id !== selectedConversation?._id)]
       );
