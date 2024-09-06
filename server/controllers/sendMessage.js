@@ -23,6 +23,7 @@ export default async function sendMessage(req, res) {
       sender: userId,
       text: text,
       file: file,
+      seen: [userId],
     });
     conversation.messages.push(message._id);
 
@@ -32,10 +33,16 @@ export default async function sendMessage(req, res) {
       .map(id => getUserSocketId(id.toString()))
 
     await Promise.all([
-      message.populate({
-        path: "sender",
-        select: "name profilePic",
-      }),
+      message.populate([
+        {
+          path: "sender",
+          select: "name profilePic",
+        },
+        {
+          path: "seen",
+          select: "name profilePic"
+        }
+      ]),
       conversation.populate([
         {
           path: "participants",

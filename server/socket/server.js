@@ -17,7 +17,6 @@ function getUserSocketId(id) {
 }
 
 io.on("connection", (socket) => {
-  console.log(`user connected ${socket.id}`);
   const userId = socket.handshake.query.userId;
   if (userId) {
     userSocket[userId] = socket.id;
@@ -27,7 +26,6 @@ io.on("connection", (socket) => {
   io.emit("getOnlineUsers", Object.keys(userSocket));
 
   socket.on("disconnect", () => {
-    console.log(`user disconnected ${socket.id}`);
     if (socket.userId) {
       delete userSocket[socket.userId];
     }

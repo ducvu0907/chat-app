@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ConversationContext } from "../contexts/ConversationContext";
 import { AuthContext } from "../contexts/AuthContext";
 import useGetConversation from "../hooks/useGetConversation";
@@ -12,20 +12,15 @@ export default function SideConversation({ conversation }) {
   const conversationName = conversation.isGroup ? conversation.name : (isMonologue ? authUser?.name : conversation.participants.filter(p => p._id !== authUser?._id)[0].name);
   const conversationPicture = conversation.isGroup ? conversation.picture : (isMonologue ? authUser?.profilePic : conversation.participants.filter(p => p._id !== authUser?._id)[0].profilePic);
   const lastMessage = conversation.messages.at(-1);
-  const lastMessageSnippet = lastMessage.text ? lastMessage.text : `sent an ${lastMessage.file?.type.startsWith("image/") ? "image" : "attachment"}`;
+  const lastMessageSnippet = lastMessage.text ? `: ${lastMessage.text}` : ` sent an ${lastMessage.file?.type.startsWith("image/") ? "image" : "attachment"}`;
   const senderName = lastMessage.sender._id === authUser?._id ? "you" : lastMessage.sender.name;
-  const [isRead, setIsRead] = useState<boolean>(conversation.messages?.at(-1).seen.includes(authUser?._id));
-
-  const handleGetConversation = async () => {
-    setIsRead(true);
-    await getConversationById(conversation._id);
-  };
+  const isRead = selectedConversation?._id === conversation._id || conversation.messages?.at(-1).seen.includes(authUser?._id);
 
   return (
     <>
       <div className={`flex gap-2 items-center hover:bg-blue-800 p-2 py-1 cursor-pointer 
       ${isSelected && "bg-sky-300"} ${!isRead && "bg-white font-bold"} border-b-2 border-gray-400`}
-        onClick={() => handleGetConversation()} >
+        onClick={() => getConversationById(conversation._id)} >
         <div className={`avatar`}>
           <div className='w-10 h-10 rounded-full overflow-hidden'>
             <img src={conversationPicture} alt='user avatar' className="object-cover w-full h-full" />
@@ -37,7 +32,7 @@ export default function SideConversation({ conversation }) {
             <p className='text-gray-300'>{conversationName}</p>
           </div>
           <div className="text-md text-gray-400 line-clamp-1">
-            {senderName}: {lastMessageSnippet}
+            {senderName}{lastMessageSnippet}
           </div>
         </div>
       </div>

@@ -46,15 +46,25 @@ export default async function getConversationByUserId(req, res) {
     // update the seen list of the last message
     if (conversation.messages.length > 0) {
       const lastMessage = conversation.messages.at(-1);
-      if (!lastMessage.seen.includes(currentUserId)) {
+      if (!lastMessage.seen.includes(currentUserId) && !currentUserId.equals(lastMessage.sender._id)) {
         lastMessage.seen.push(currentUserId);
         await lastMessage.save();
+        await lastMessage.populate({
+          path: "seen",
+          select: "name profilePic"
+        });
         const otherSocketId = getUserSocketId[otherUserId];
+        const newSeen = lastMessage.seen;
         if (otherSocketId) {
-          io.to(socketId).emit("read", { user, conversation });
+          io.to(socketId).emit("read", { newSeen, conversation });
         }
       }
     }
+
+    await conversation.messages.at(-1)?.populate({
+      path: "seen",
+      select: "name profilePic"
+    });
 
     res.status(200).json(conversation);
 

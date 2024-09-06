@@ -6,8 +6,8 @@ export default async function getConversationById(req, res) {
   try {
     const currentUserId = req.user._id;
     const conversationId = req.params.conversationId;
-    const currentUser = await UserModel.findOne({ _id: currentUserId });
-    if (!currentUser) {
+    const user = await UserModel.findOne({ _id: currentUserId });
+    if (!user) {
       res.status(400).json({
         error: "invalid user"
       });
@@ -39,21 +39,30 @@ export default async function getConversationById(req, res) {
     // update the seen list of the last message
     if (conversation.messages.length > 0) {
       const lastMessage = conversation.messages.at(-1);
-      // if the current user not in seen
-      if (!lastMessage.seen.includes(currentUserId)) {
+      if (!lastMessage.seen.includes(currentUserId) && !currentUserId.equals(lastMessage.sender._id)) {
         lastMessage.seen.push(currentUserId);
         await lastMessage.save();
-        // exclude current user and map to socket id
+        await lastMessage.populate({
+          path: "seen",
+          select: "name profilePic"
+        });
+
         const participantSocketIds = conversation.participants
           .filter(participant => !participant._id.equals(currentUserId) && getUserSocketId(participant._id))
           .map(participant => getUserSocketId(participant._id.toString()));
 
-        // broadcast read event to participants
+        const newSeen = lastMessage.seen;
+
         participantSocketIds.forEach(socketId => {
-          io.to(socketId).emit("read", { currentUser, conversation });
+          io.to(socketId).emit("read", { newSeen, conversation });
         });
       }
     }
+
+    await conversation.messages.at(-1)?.populate({
+      path: "seen",
+      select: "name profilePic"
+    });
 
     res.status(200).json(conversation);
 
