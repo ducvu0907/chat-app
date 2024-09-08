@@ -12,12 +12,14 @@ export default function SideConversation({ conversation }) {
   const conversationName = conversation.isGroup ? conversation.name : (isMonologue ? authUser?.name : conversation.participants.filter(p => p._id !== authUser?._id)[0].name);
   const conversationPicture = conversation.isGroup ? conversation.picture : (isMonologue ? authUser?.profilePic : conversation.participants.filter(p => p._id !== authUser?._id)[0].profilePic);
   const lastMessage = conversation.messages.at(-1);
-  const lastMessageSnippet = lastMessage.text ? `: ${lastMessage.text}` : ` sent an ${lastMessage.file?.type.startsWith("image/") ? "image" : "attachment"}`;
-  const senderName = lastMessage.sender._id === authUser?._id ? "you" : lastMessage.sender.name;
-  const isRead = conversation.messages.at(-1).seen.find(user => user._id === authUser?._id);
+  const lastMessageSnippet = lastMessage?.text ? `: ${lastMessage.text}` : ` sent an ${lastMessage?.file.type.startsWith("image/") ? "image" : "attachment"}`;
+  const senderName = lastMessage?.sender._id === authUser?._id ? "you" : lastMessage?.sender.name;
+  const isRead = lastMessage ? lastMessage?.seen.find(user => user._id === authUser?._id) : true;
 
   const handleReadConversation = async () => {
-    conversation.messages.at(-1).seen.push(authUser);
+    if (lastMessage) {
+      conversation.messages.at(-1).seen.push(authUser);
+    }
     await getConversationById(conversation._id);
   };
 
@@ -36,9 +38,11 @@ export default function SideConversation({ conversation }) {
           <div className='flex justify-between'>
             <p className='text-gray-300'>{conversationName}</p>
           </div>
-          <div className="text-md text-gray-400 line-clamp-1">
-            {senderName}{lastMessageSnippet}
-          </div>
+          {lastMessage &&
+            <div className="text-md text-gray-400 line-clamp-1">
+              {senderName}{lastMessageSnippet}
+            </div>
+          }
         </div>
       </div>
     </>

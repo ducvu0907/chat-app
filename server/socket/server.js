@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", Object.keys(userSocket));
   });
 
-  // TODO: handle video calling events
+  // TODO: handle video call events
   socket.on("callUser", (data) => {
     io.to(data.to).emit("callMade", {
       offer: data.offer,

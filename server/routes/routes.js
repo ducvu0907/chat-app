@@ -8,6 +8,7 @@ import getUsers from "../controllers/getUsers.js";
 import sendMessage from "../controllers/sendMessage.js";
 import verifyToken from "../middlewares/verifyToken.js";
 import getConversationByUserId from "../controllers/getConversationByUserId.js";
+import createGroupConversation from "../controllers/createGroupConversation.js";
 // setup uploads storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -20,20 +21,21 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 const router = express.Router();
 
-// auth routes
+// auth route
 router.post("/auth/signup", signup);
 router.post("/auth/login", login);
 router.post("/auth/logout", logout);
 
-// user routes
+// user route
 router.get("/users", verifyToken, getUsers);
 
-// conversation routes
+// conversation route
 router.get("/conversations", verifyToken, getConversations);
+router.post("/conversations/group", verifyToken, createGroupConversation);
 router.get("/conversations/:conversationId", verifyToken, getConversationById);
 router.get("/conversations/user/:receiverId", verifyToken, getConversationByUserId);
 
-// message routes
+// message route
 router.get("/messages/:conversationId", verifyToken, getMessages);
 router.post("/messages/conversation/:conversationId", verifyToken, upload.single("file"), sendMessage);
 

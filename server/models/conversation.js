@@ -16,6 +16,10 @@ const conversationSchema = new mongoose.Schema({
   isGroup: {
     type: Boolean,
   },
+  createdBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: "user",
+  },
   messages: [
     {
       type: mongoose.Schema.ObjectId,
