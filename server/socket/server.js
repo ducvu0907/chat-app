@@ -12,54 +12,58 @@ const io = new Server(server, {
 });
 
 const userSocket = {};
+
 function getUserSocketId(id) {
   return userSocket[id];
 }
 
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
+
   if (userId) {
     userSocket[userId] = socket.id;
     socket.userId = userId;
   }
 
-  io.emit("getOnlineUsers", Object.keys(userSocket));
+  io.emit("get-online-users", Object.keys(userSocket));
 
   socket.on("disconnect", () => {
     if (socket.userId) {
       delete userSocket[socket.userId];
+      io.emit("get-online-users", Object.keys(userSocket));
     }
-    io.emit("getOnlineUsers", Object.keys(userSocket));
   });
 
-  // TODO: handle video call events
-  socket.on("callUser", (data) => {
-    io.to(data.to).emit("callMade", {
-      offer: data.offer,
-      socket: socket.id,
-    });
+  // video call events
+  socket.on("offer", ({ offer, to }) => {
+    const toSocketId = getUserSocketId(to);
+    if (toSocketId) {
+      io.to(toSocketId).emit("receive-offer", {
+        offer: offer,
+        from: socket.userId,
+      });
+    }
   });
 
-  socket.on("acceptCall", (data) => {
-    io.to(data.to).emit("answerMade", {
-      answer: data.answer,
-      socket: socket.id,
-    });
+  socket.on("answer", ({ answer, to }) => {
+    const toSocketId = getUserSocketId(to);
+    if (toSocketId) {
+      io.to(toSocketId).emit("receive-answer", {
+        answer: answer,
+        from: socket.userId,
+      });
+    }
   });
 
-  socket.on("rejectCall", (data) => {
-    io.to(data.to).emit("callRejected", {
-      socket: socket.id,
-    });
+  socket.on("ice-candidate", ({ candidate, to }) => {
+    const toSocketId = getUserSocketId(to);
+    if (toSocketId) {
+      io.to(toSocketId).emit("receive-ice-candidate", {
+        candidate: candidate,
+        from: socket.userId,
+      });
+    }
   });
-
-  socket.on("iceCandidate", (data) => {
-    io.to(data.to).emit("iceCandidatePosted", {
-      candidate: data.candidate,
-      socket: socket.id,
-    });
-  });
-
 });
 
 export { app, server, io, getUserSocketId };

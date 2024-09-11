@@ -10,7 +10,7 @@ interface SocketContextType {
 export const SocketContext = createContext<SocketContextType>({ socket: null, onlineUsers: [] });
 
 export function SocketContextProvider({ children }: { children: ReactNode }) {
-  const [socket, setSocket] = useState(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { authUser } = useContext(AuthContext);
 
@@ -22,7 +22,7 @@ export function SocketContextProvider({ children }: { children: ReactNode }) {
         },
       });
       setSocket(socket);
-      socket.on("getOnlineUsers", (users) => {
+      socket.on("get-online-users", (users) => {
         setOnlineUsers(users);
       });
 
