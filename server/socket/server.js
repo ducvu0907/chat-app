@@ -35,35 +35,49 @@ io.on("connection", (socket) => {
   });
 
   // video call events
-  socket.on("offer", ({ offer, to }) => {
+  socket.on("offer", ({ offer, to, convId }) => {
     const toSocketId = getUserSocketId(to);
     if (toSocketId) {
       io.to(toSocketId).emit("receive-offer", {
         offer: offer,
         from: socket.userId,
+        convId: convId
       });
     }
   });
 
-  socket.on("answer", ({ answer, to }) => {
+  socket.on("answer", ({ answer, to, convId }) => {
     const toSocketId = getUserSocketId(to);
     if (toSocketId) {
       io.to(toSocketId).emit("receive-answer", {
         answer: answer,
         from: socket.userId,
+        convId: convId
       });
     }
   });
 
-  socket.on("ice-candidate", ({ candidate, to }) => {
+  socket.on("ice-candidate", ({ candidate, to, convId }) => {
     const toSocketId = getUserSocketId(to);
     if (toSocketId) {
       io.to(toSocketId).emit("receive-ice-candidate", {
         candidate: candidate,
         from: socket.userId,
+        convId: convId
       });
     }
   });
+
+  socket.on("leave", ({ to, convId }) => {
+    const toSocketId = getUserSocketId(to);
+    if (toSocketId) {
+      io.to(toSocketId).emit("receive-leave", {
+        from: socket.userId,
+        convId: convId
+      });
+    }
+  });
+
 });
 
 export { app, server, io, getUserSocketId };
