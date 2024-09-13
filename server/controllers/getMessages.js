@@ -23,7 +23,7 @@ export default async function getMessages(req, res) {
     res.status(200).json(messages);
 
   } catch (error) {
-    console.log("server error while getting messages");
+    console.log("server error while getting messages", error);
     res.status(500).json({
       error: error.message,
     });

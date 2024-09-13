@@ -25,14 +25,14 @@ export default function SearchBar({ defaultUsers }) {
   return (
     <form onSubmit={handleSearchUser} className='flex items-center gap-2 mx-auto'>
       <input
-        type='text'
-        placeholder='Search'
-        className='input input-bordered rounded-full bg-slate-600 text-white w-[80%]'
+        type="text"
+        placeholder="Find user"
+        className="input input-bordered rounded-full bg-slate-600 text-white w-[80%]"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
       />
-      <button type='submit' className='btn btn-circle bg-slate-500 text-white'>
-        <IoSearchSharp className='w-5 h-5 outline-none' />
+      <button type="submit" className="btn btn-circle bg-slate-500 text-white">
+        <IoSearchSharp className="w-5 h-5 outline-none" />
       </button>
     </form>
   );

@@ -14,6 +14,12 @@ const userSchema = new mongoose.Schema({
   profilePic: {
     type: String
   },
+  friends: [{
+    type: mongoose.Schema.ObjectId
+  }],
+  friendRequests: [{
+    type: mongoose.Schema.ObjectId,
+  }],
   conversations: [
     {
       type: mongoose.Schema.ObjectId,

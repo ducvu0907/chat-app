@@ -46,7 +46,7 @@ export default async function createGroupConversation(req, res) {
     res.status(201).json(conversation);
 
   } catch (error) {
-    console.log("server error while creating group conversation");
+    console.log("server error while creating group conversation", error);
     res.status(500).json({
       error: error.message,
     });

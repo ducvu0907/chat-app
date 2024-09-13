@@ -67,7 +67,7 @@ export default async function getConversationById(req, res) {
     res.status(200).json(conversation);
 
   } catch (error) {
-    console.log("server error while getting conversation by id");
+    console.log("server error while getting conversation by id", error);
     res.status(500).json({
       error: error.message,
     });

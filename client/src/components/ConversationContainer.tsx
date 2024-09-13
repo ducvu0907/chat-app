@@ -35,8 +35,8 @@ export default function ConversationContainer() {
             </span>
           </div>
           <div>
-            <button onClick={openVideoCall}>
-              <MdPhone size="24px" />
+            <button className="btn-primary bg-black p-2 rounded-md" onClick={openVideoCall}>
+              Join call
             </button>
           </div>
         </div>

@@ -41,7 +41,7 @@ export default async function getConversations(req, res) {
     res.status(200).json(conversations);
 
   } catch (error) {
-    console.log("server error while getting conversations");
+    console.log("server error while getting conversations", error);
     res.status(500).json({
       error: error.message,
     });

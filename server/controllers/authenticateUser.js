@@ -28,7 +28,7 @@ export async function login(req, res) {
     });
 
   } catch (error) {
-    console.log("server error while logging in");
+    console.log("server error while logging in", error);
     res.status(500).json({
       error: error.message,
     });
@@ -83,7 +83,7 @@ export async function signup(req, res) {
     });
 
   } catch (error) {
-    console.log("server error while signing up");
+    console.log("server error while signing up", error);
     res.status(500).json({
       error: error.message,
     });

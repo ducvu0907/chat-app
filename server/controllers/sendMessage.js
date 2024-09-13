@@ -66,7 +66,7 @@ export default async function sendMessage(req, res) {
     res.status(201).json(message);
 
   } catch (error) {
-    console.log("server error while sending messagee");
+    console.log("server error while sending messagee", error);
     res.status(500).json({
       error: error.message,
     });

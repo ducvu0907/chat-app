@@ -7,7 +7,7 @@ export default async function getUsers(req, res) {
     res.status(200).json(users);
 
   } catch (error) {
-    console.log("server error while getting users");
+    console.log("server error while getting users", error);
     res.status(500).json({
       error: error.message,
     });
