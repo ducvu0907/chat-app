@@ -3,7 +3,6 @@ import Messages from "./Messages";
 import { ConversationContext } from "../contexts/ConversationContext";
 import MessageInput from "./MessageInput";
 import { AuthContext } from "../contexts/AuthContext";
-import { MdPhone } from "react-icons/md";
 
 export default function ConversationContainer() {
   const { selectedConversation } = useContext(ConversationContext);
