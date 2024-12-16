@@ -1,7 +1,10 @@
+# Real-Time Chat Application
+
+## Setup
 ```plaintext
 PORT=5000
-MONGODB_URI=mongodb_connection_uri
-JWT_SECRET=jwt_secret
+MONGODB_URI=<mongodb_connection_uri>
+JWT_SECRET=<jwt_secret>
 NODE_ENV=development
 ```
 
