@@ -8,7 +8,7 @@ export default function CreateGroupConversationButton() {
   const [toggleAdd, setToggleAdd] = useState<boolean>(false);
   const [inputName, setInputName] = useState<string>("");
   const { authUser } = useContext(AuthContext);
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState<any>(null);
   const { loading, createGroupConversation } = useCreateGroupConversation();
   const { users } = useContext(UsersContext);
   const [suggestions, setSuggestions] = useState([]);
@@ -23,7 +23,7 @@ export default function CreateGroupConversationButton() {
     setInputName(name);
     if (name) {
       const filteredSuggestions = users.filter(user =>
-        user.name.toLowerCase().includes(name.toLowerCase())
+        (user as any).name.toLowerCase().includes(name.toLowerCase())
       );
       setSuggestions(filteredSuggestions);
     } else {
@@ -31,8 +31,8 @@ export default function CreateGroupConversationButton() {
     }
   };
 
-  const handleAddParticipant = (user) => {
-    if (user && !participants.some(p => p._id === user._id)) {
+  const handleAddParticipant = (user: any) => {
+    if (user && !(participants as any).some((p: any) => (p as any)._id === user._id)) {
       setParticipants([...participants, user]);
     }
     setInputName("");
@@ -53,14 +53,14 @@ export default function CreateGroupConversationButton() {
           {suggestions.length > 0 && (
             <ul className="w-full border border-gray-300 bg-amber-500 rounded shadow-lg max-h-60 overflow-auto">
               {suggestions.map(user => (
-                <li key={user._id} onClick={() => handleAddParticipant(user)} className="p-2 cursor-pointer hover:bg-gray-500">
-                  {user.name}
+                <li key={(user as any)._id} onClick={() => handleAddParticipant(user)} className="p-2 cursor-pointer hover:bg-gray-500">
+                  {(user as any).name}
                 </li>
               ))}
             </ul>
           )}
           <div className="mt-2">
-            {participants.map(participant => (
+            {(participants as any[]).map((participant: any) => (
               <div key={participant._id} className="p-1 border border-gray-300 rounded mb-1">
                 {participant.name}
               </div>

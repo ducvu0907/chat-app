@@ -4,7 +4,7 @@ import { ConversationsContext } from "../contexts/ConversationsContext";
 
 export default function useCreateGroupConversation() {
   const [loading, setLoading] = useState(false);
-  const { setConversations } = useContext(ConversationsContext);
+  const { setConversations } = useContext(ConversationsContext) as any; // Cast to any
 
   const createGroupConversation = async (participants: string[]) => {
     setLoading(true);
@@ -19,7 +19,7 @@ export default function useCreateGroupConversation() {
         throw new Error(data.error);
       }
       console.log(data);
-      setConversations(prevConvs => [data, ...prevConvs]);
+      setConversations((prevConvs: any[]) => [data, ...prevConvs]); // Cast to any
 
     } catch (error) {
       toast.error((error as Error).message);

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 export default function useGetMessages() {
   const [loading, setLoading] = useState(false);
 
-  const getMessages = async (conversation) => {
+  const getMessages = async (conversation: any) => {
     setLoading(true);
     try {
       const res = await fetch(`/api/messages/${conversation?._id}`);

@@ -1,6 +1,6 @@
 import LogoutButton from './LogoutButton';
 import { AuthContext } from '../contexts/AuthContext';
-import SideConversation from './SideConverstation';
+import SideConversation from './SideConversation';
 import { useContext } from 'react';
 import useGetConversations from '../hooks/useGetConversations';
 import CreateGroupConversationButton from './CreateGroupConversationButton';
@@ -15,7 +15,7 @@ export default function Sidebar() {
         <div className="w-full h-full bg-slate-600 rounded-md overflow-auto">
           <CreateGroupConversationButton />
           <h2 className="text-center text-xl mb-2 font-semibold">Messages</h2>
-          {conversations.map((conversation, idx) => (conversation.isGroup || conversation.messages.length > 0)
+          {conversations.map((conversation, idx) => ((conversation as any).isGroup || (conversation as any).messages.length > 0)
             && <SideConversation key={idx} conversation={conversation} />)}
         </div>
       }

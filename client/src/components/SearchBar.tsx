@@ -2,7 +2,7 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import { UsersContext } from "../contexts/UsersContext";
 
-export default function SearchBar({ defaultUsers }) {
+export default function SearchBar({ defaultUsers }: { defaultUsers: any }) {
   const [searchInput, setSearchInput] = useState<string>("");
   const { setUsers } = useContext(UsersContext);
 
@@ -18,7 +18,7 @@ export default function SearchBar({ defaultUsers }) {
     if (!searchQuery) {
       return;
     }
-    const filteredUsers = defaultUsers.filter(user => user.name.toLowerCase().includes(searchQuery));
+    const filteredUsers = defaultUsers.filter((user: any) => user.name.toLowerCase().includes(searchQuery));
     setUsers(filteredUsers);
   };
 

@@ -3,18 +3,19 @@ import { ConversationContext } from "../contexts/ConversationContext";
 import { AuthContext } from "../contexts/AuthContext";
 import useGetConversation from "../hooks/useGetConversation";
 
-export default function SideConversation({ conversation }) {
+export default function SideConversation({ conversation }: {conversation: any}) {
   const { getConversationById } = useGetConversation();
   const { selectedConversation } = useContext(ConversationContext);
   const { authUser } = useContext(AuthContext);
   const isSelected = selectedConversation?._id === conversation._id;
   const isMonologue = !conversation.isGroup && conversation.participants.length === 1;
-  const conversationName = conversation.isGroup ? conversation.name : (isMonologue ? authUser?.name : conversation.participants.filter(p => p._id !== authUser?._id)[0].name);
-  const conversationPicture = conversation.isGroup ? conversation.picture : (isMonologue ? authUser?.profilePic : conversation.participants.filter(p => p._id !== authUser?._id)[0].profilePic);
+  const conversationName = conversation.isGroup ? conversation.name : (isMonologue ? authUser?.name : conversation.participants.filter((p: any) => p._id !== authUser?._id)[0].name);
+  const conversationPicture = conversation.isGroup ? conversation.picture : (isMonologue ? authUser?.profilePic : conversation.participants.filter((p: any) => p._id !== authUser?._id)[0].profilePic);
   const lastMessage = conversation.messages.at(-1);
   const lastMessageSnippet = lastMessage?.text ? `: ${lastMessage.text}` : ` sent an ${lastMessage?.file.type.startsWith("image/") ? "image" : "attachment"}`;
   const senderName = lastMessage?.sender._id === authUser?._id ? "you" : lastMessage?.sender.name;
-  const isRead = lastMessage ? lastMessage?.seen.find(user => user._id === authUser?._id) : true;
+  // const isRead = lastMessage ? lastMessage?.seen?.find((user: any) => user._id === authUser?._id) : true;
+  const isRead = true;
 
   const handleReadConversation = async () => {
     if (lastMessage) {

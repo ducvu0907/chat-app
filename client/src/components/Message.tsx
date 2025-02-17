@@ -4,7 +4,7 @@ import { FaFile } from "react-icons/fa";
 import ReactDOM from 'react-dom';
 import { FaRegCircleXmark } from "react-icons/fa6";
 
-export default function Message({ message }) {
+export default function Message({ message }: {message: any}) {
   const { authUser } = useContext(AuthContext);
   const messagePosition = message.sender._id === authUser?._id ? "chat-end" : "chat-start";
   const avatarColor = message.sender._id === authUser?._id ? "bg-blue-500" : "";

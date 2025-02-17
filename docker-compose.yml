@@ -5,6 +5,7 @@ services:
       - "27017:27017"
     volumes: 
       - mongo-data:/data/db
+
   server:
     build: ./server
     ports:
@@ -13,11 +14,14 @@ services:
       - MONGODB_URI=mongodb://mongo:27017/chat_app_db
     depends_on:
       - mongo
+
   client:
     build: ./client
     ports:
-      - "3000:3000"
+      - "80:80"
     depends_on:
       - server
+    restart: unless-stopped
+
 volumes:
   mongo-data:

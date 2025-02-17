@@ -2,7 +2,7 @@ import { useContext } from "react";
 import useGetConversation from "../hooks/useGetConversation"
 import { SocketContext } from "../contexts/SocketContext";
 
-export default function UserStatus({ user }) {
+export default function UserStatus({ user }: {user: any}) {
   const { getConversationByUserId } = useGetConversation();
   const { onlineUsers } = useContext(SocketContext);
   let isOnline = onlineUsers.includes(user._id);

@@ -2,8 +2,10 @@ import React, { createContext, ReactNode, useState } from "react";
 
 interface Conversation {
   _id: string;
+  picture: string;
+  name: string;
   isGroup: boolean;
-  participants: [];
+  participants: any[];
   messages: [];
 }
 

@@ -9,12 +9,12 @@ import useGetConversation from "../hooks/useGetConversation";
 
 export default function Messages() {
   const lastMessageRef = useRef<HTMLDivElement>(null);
-  const { selectedConversation, setSelectedConversation } = useContext(ConversationContext);
-  const [messages, setMessages] = useState([]);
+  const { selectedConversation } = useContext(ConversationContext) as any; // Cast to any
+  const [messages, setMessages] = useState<any[]>([]); // Cast messages as any[]
   const { socket } = useContext(SocketContext);
-  const { setConversations } = useContext(ConversationsContext);
-  const { authUser } = useContext(AuthContext);
-  const [lastMessageSeen, setLastMessageSeen] = useState([]);
+  const { setConversations } = useContext(ConversationsContext) as any; // Cast to any
+  const { authUser } = useContext(AuthContext) as any; // Cast to any
+  const [lastMessageSeen, setLastMessageSeen] = useState<any[]>([]); // Cast to any[]
   const { getConversationById } = useGetConversation();
 
   useEffect(() => {
@@ -25,22 +25,20 @@ export default function Messages() {
 
   useEffect(() => {
     // update new message
-    socket?.on("message", ({ message, conversation }) => {
+    socket?.on("message", ({ conversation }: any) => { // Cast to any
       if (selectedConversation?._id === conversation._id) {
-        // setSelectedConversation({ ...selectedConversation, messages: [...messages, message] });
-        // setLastMessageSeen([...message.seen, authUser]);
         getConversationById(conversation._id); // refetch - might change later
         conversation.messages.at(-1).seen.push(authUser);
       }
       // update sidebar
-      setConversations(prevConvs => [conversation, ...prevConvs
-        .filter(conv => conv._id !== conversation._id)]
-      );
-
+      setConversations((prevConvs: any[]) => [
+        conversation,
+        ...prevConvs.filter((conv: any) => conv._id !== conversation._id), // Cast to any
+      ]);
     });
 
     // update last message seen
-    socket?.on("read", ({ newSeen, conversation }) => {
+    socket?.on("read", ({ newSeen, conversation }: any) => { // Cast to any
       if (selectedConversation?._id === conversation._id) {
         setLastMessageSeen(newSeen);
       }
@@ -49,11 +47,11 @@ export default function Messages() {
     return () => {
       socket?.off("message");
       socket?.off("read");
-    }
+    };
   }, [socket, messages]);
 
   useEffect(() => {
-    setLastMessageSeen(messages.at(-1)?.seen);
+    setLastMessageSeen((messages.at(-1) as any)?.seen);
   }, [selectedConversation, socket, messages]);
 
   // scroll to the last message
@@ -61,13 +59,14 @@ export default function Messages() {
     setTimeout(() => {
       lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 0);
-
   }, [selectedConversation, socket, messages, lastMessageSeen]);
 
   return (
     <>
-      {!selectedConversation ? (<EmptyConversation />) : (
-        <div className='px-4 flex-1 overflow-y-auto'>
+      {!selectedConversation ? (
+        <EmptyConversation />
+      ) : (
+        <div className="px-4 flex-1 overflow-y-auto">
           {selectedConversation &&
             messages.length > 0 &&
             messages.map((message, index) => (
@@ -75,8 +74,12 @@ export default function Messages() {
                 <Message message={message} />
                 {index === messages.length - 1 && lastMessageSeen && (
                   <div className="flex items-center mt-2 space-x-1 justify-end">
-                    {lastMessageSeen.filter(user => user._id !== (authUser?._id) && user._id !== message.sender._id)
-                      .map(user => (
+                    {lastMessageSeen
+                      .filter(
+                        (user: any) =>
+                          user._id !== (authUser?._id) && user._id !== (message as any).sender._id // Cast as any
+                      )
+                      .map((user: any) => ( // Cast as any
                         <img
                           key={user._id}
                           src={user.profilePic}
@@ -89,10 +92,10 @@ export default function Messages() {
             ))}
 
           {messages.length === 0 && (
-            <p className='text-center text-2xl text-orange-300'>Send a message to start the conversation</p>
+            <p className="text-center text-2xl text-orange-300">Send a message to start the conversation</p>
           )}
         </div>
       )}
     </>
-  )
+  );
 }

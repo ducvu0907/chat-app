@@ -5,8 +5,8 @@ import { ConversationsContext } from "../contexts/ConversationsContext";
 
 export default function useSendMessage() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { selectedConversation, setSelectedConversation } = useContext(ConversationContext);
-  const { setConversations } = useContext(ConversationsContext);
+  const { selectedConversation, setSelectedConversation } = useContext(ConversationContext) as any;
+  const { setConversations } = useContext(ConversationsContext) as any;
 
   const sendMessage = async (text: string, file: File | null) => {
     setLoading(true);
@@ -30,8 +30,8 @@ export default function useSendMessage() {
       selectedConversation?.messages.push(data);
       setSelectedConversation({ ...selectedConversation });
 
-      setConversations(prevConvs => [selectedConversation, ...prevConvs
-        .filter(conv => conv._id !== selectedConversation?._id)]
+      setConversations((prevConvs: any) => [selectedConversation, ...prevConvs
+        .filter((conv: any) => conv._id !== selectedConversation?._id)]
       );
 
     } catch (error) {

@@ -25,10 +25,10 @@ export default function VideoCallContainer() {
   // get other participants
   useEffect(() => {
     if (conversation && authUser) {
-      const ids = conversation.participants.filter(p => p._id !== authUser._id).map(p => p._id);
+      const ids = ((conversation as any).participants as any[]).filter((p: any) => p._id !== authUser._id).map(p => p._id);
       const userNames = new Map<string, string>();
 
-      conversation.participants.forEach(p => {
+      ((conversation as any).participants as any[]).forEach(p => {
         userNames.set(p._id, p.name);
       });
 
@@ -63,7 +63,7 @@ export default function VideoCallContainer() {
         // send ice candidate
         connection.onicecandidate = (event) => {
           if (event.candidate) {
-            socket?.emit("ice-candidate", { candidate: event.candidate, to: userId, convId: conversation?._id });
+            socket?.emit("ice-candidate", { candidate: event.candidate, to: userId, convId: (conversation as any)?._id });
           }
         };
 
@@ -79,7 +79,7 @@ export default function VideoCallContainer() {
 
     const handleReceiveOffer = async ({ offer, from, convId }: { offer: RTCSessionDescriptionInit, from: string, convId: string }) => {
       // if not the same conversation
-      if (convId !== conversation?._id) {
+      if (convId !== (conversation as any)?._id) {
         return;
       }
       const connection = rtcConns.get(from);
@@ -88,7 +88,7 @@ export default function VideoCallContainer() {
           await connection.setRemoteDescription(new RTCSessionDescription(offer));
           const answer = await connection.createAnswer();
           await connection.setLocalDescription(answer);
-          socket.emit("answer", { answer, to: from, convId: conversation?._id });
+          socket.emit("answer", { answer, to: from, convId: (conversation as any)?._id });
         } catch (error) {
           console.error(error);
         }
@@ -96,7 +96,7 @@ export default function VideoCallContainer() {
     };
 
     const handleReceiveAnswer = async ({ answer, from, convId }: { answer: RTCSessionDescriptionInit, from: string, convId: string }) => {
-      if (convId !== conversation?._id) {
+      if (convId !== (conversation as any)?._id) {
         return;
       }
       const connection = rtcConns.get(from);
@@ -110,7 +110,7 @@ export default function VideoCallContainer() {
     };
 
     const handleReceiveIceCandidate = async ({ candidate, from, convId }: { candidate: RTCIceCandidateInit, from: string, convId: string }) => {
-      if (convId !== conversation?._id) {
+      if (convId !== (conversation as any)?._id) {
         return;
       }
       const connection = rtcConns.get(from);
@@ -124,7 +124,7 @@ export default function VideoCallContainer() {
     };
 
     const handleLeave = ({ from, convId }: { from: string, convId: string }) => {
-      if (convId !== conversation?._id) {
+      if (convId !== (conversation as any)?._id) {
         return;
       }
       setStreams(prevStreams => {
@@ -171,7 +171,7 @@ export default function VideoCallContainer() {
         await Promise.all(Array.from(rtcConns.entries()).map(async ([userId, connection]) => {
           const offer = await connection.createOffer();
           await connection.setLocalDescription(offer);
-          socket?.emit("offer", { offer, to: userId, convId: conversation?._id });
+          socket?.emit("offer", { offer, to: userId, convId: (conversation as any)?._id });
         }));
 
       } catch (error) {
@@ -198,7 +198,7 @@ export default function VideoCallContainer() {
     setStreams(new Map());
 
     otherUserIds.forEach(userId => {
-      socket?.emit("leave", { to: userId, convId: conversation?._id });
+      socket?.emit("leave", { to: userId, convId: (conversation as any)?._id });
     });
 
     window.close();
