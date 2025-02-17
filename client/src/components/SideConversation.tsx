@@ -14,8 +14,7 @@ export default function SideConversation({ conversation }: {conversation: any}) 
   const lastMessage = conversation.messages.at(-1);
   const lastMessageSnippet = lastMessage?.text ? `: ${lastMessage.text}` : ` sent an ${lastMessage?.file.type.startsWith("image/") ? "image" : "attachment"}`;
   const senderName = lastMessage?.sender._id === authUser?._id ? "you" : lastMessage?.sender.name;
-  // const isRead = lastMessage ? lastMessage?.seen?.find((user: any) => user._id === authUser?._id) : true;
-  const isRead = true;
+  const isRead = lastMessage ? lastMessage?.seen?.find((user: any) => user._id === authUser?._id) : true;
 
   const handleReadConversation = async () => {
     if (lastMessage) {
