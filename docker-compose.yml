@@ -6,7 +6,7 @@ services:
     volumes: 
       - mongo-data:/data/db
 
-  # test multiple backend instances for nginx to load balance
+  # multiple backend instances to test nginx load balance
   server-1:
     build: ./server
     ports:
