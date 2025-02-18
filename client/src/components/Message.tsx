@@ -41,7 +41,9 @@ export default function Message({ message }: {message: any}) {
     if (!message.file) {
       return null;
     }
-    const source = `http://localhost:5000/static/${message.file.name}`;
+    // serve via minio
+    // const source = `http://localhost:5000/static/${message.file.name}`;
+    const source = `http://localhost:9000/chat-app-object-db/${message.file.name}`;
     if (message.file.type.startsWith("image/")) {
       return (
         <img src={source} alt="image" className="w-32 h-32 object-cover rounded" onClick={() => setModelImageSrc(source)} />

@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
-app.use("/static", express.static(path.join(__dirname, "uploads")));
+app.use("/static", express.static(path.join(__dirname, "uploads"))); // serve static files
 app.use(cors({
   origin: "*"
 }));

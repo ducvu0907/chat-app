@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import fs from "fs";
 import { login, signup, logout } from "../controllers/authenticateUser.js";
 import getConversationById from "../controllers/getConversationById.js";
 import getConversations from "../controllers/getConversations.js";
@@ -9,13 +10,15 @@ import sendMessage from "../controllers/sendMessage.js";
 import verifyToken from "../middlewares/verifyToken.js";
 import getConversationByUserId from "../controllers/getConversationByUserId.js";
 import createGroupConversation from "../controllers/createGroupConversation.js";
+import { getFileUrlFromMinio, uploadFileToMinio } from "../middlewares/minioHelper.js";
 // setup uploads storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    const uniqueFilename = `${Date.now()} - ${file.originalname}`;
+    cb(null, uniqueFilename);
   }
 });
 const upload = multer({ storage: storage });
@@ -37,6 +40,8 @@ router.get("/conversations/user/:receiverId", verifyToken, getConversationByUser
 
 // message route
 router.get("/messages/:conversationId", verifyToken, getMessages);
-router.post("/messages/conversation/:conversationId", verifyToken, upload.single("file"), sendMessage);
+router.post("/messages/conversation/:conversationId", verifyToken, upload.single("file"), uploadFileToMinio, sendMessage);
 
+// static route
+// router.get("/files/:fileName", getFileUrlFromMinio);
 export default router;

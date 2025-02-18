@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import * as Minio from "minio";
 
 const app = express();
 const server = createServer(app);
@@ -8,6 +9,14 @@ const io = new Server(server, {
   cors: {
     origin: "*"
   },
+});
+
+const minioClient = new Minio.Client({
+  endPoint: 'minio',
+  port: 9000,
+  useSSL: false,
+  accessKey: 'v7XfYYn81Op5T4Nbmhic',
+  secretKey: 'bdPYjeDUi1C9gyuPBMrUyE9ldrJ54YP3pIzKymIv',
 });
 
 const userSocket = {};
@@ -79,4 +88,4 @@ io.on("connection", (socket) => {
 
 });
 
-export { app, server, io, getUserSocketId };
+export { app, server, io, getUserSocketId, minioClient };

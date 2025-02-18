@@ -8,7 +8,7 @@ export default async function sendMessage(req, res) {
     const conversationId = req.params.conversationId;
     const { text } = req.body;
     const file = req.file ? {
-      name: req.file.originalname,
+      name: req.file.filename,
       type: req.file.mimetype
     } : null;
 
