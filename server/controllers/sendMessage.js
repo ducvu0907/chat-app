@@ -1,6 +1,7 @@
 import MessageModel from "../models/message.js";
 import ConversationModel from "../models/conversation.js";
 import { getUserSocketId, io } from "../socket/server.js";
+import { redisClient } from "../socket/server.js";
 
 export default async function sendMessage(req, res) {
   try {
@@ -19,6 +20,14 @@ export default async function sendMessage(req, res) {
       });
     }
 
+    // check if cache exists then invalidate the cache first to ensure synchronization between reads
+    const cachedKey = `conversation:${conversation.id}`;
+    const cachedConversation = await redisClient.get(cachedKey);
+    if (cachedConversation) {
+      await redisClient.del(cachedKey);
+      console.log("Invalidates cached key first");
+    }
+
     const message = new MessageModel({
       sender: userId,
       text: text,
@@ -29,8 +38,8 @@ export default async function sendMessage(req, res) {
 
     await Promise.all([message.save(), conversation.save()]);
     let participantSocketIds = conversation.participants
-      .filter(id => !id.equals(userId) && getUserSocketId(id))
       .map(id => getUserSocketId(id.toString()))
+      .filter(Boolean);
 
     await Promise.all([
       message.populate([
@@ -58,15 +67,23 @@ export default async function sendMessage(req, res) {
       ]),
     ]);
 
-    // broadcast to all participants except for the sender
-    participantSocketIds.forEach(socketId => {
-      io.to(socketId).emit("message", { message, conversation });
-    });
+    // broadcast
+    io.emit("message", { message, conversation });
+
+    // write to cache if exists, should persist to handle the write even if cache failed
+    if (cachedConversation) {
+      try {
+        await redisClient.setEx(cachedKey, 300, JSON.stringify(conversation));
+        console.log("Cached conversation updated successfully");
+      } catch (redisError) {
+        console.error("Error updating cache:", redisError);
+      }
+    }
 
     res.status(201).json(message);
 
   } catch (error) {
-    console.log("server error while sending messagee", error);
+    console.log("server error while sending message", error);
     res.status(500).json({
       error: error.message,
     });

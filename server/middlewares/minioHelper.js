@@ -34,7 +34,7 @@ export async function uploadFileToMinio(req, res, next) {
   try {
     if (!req.file) {
       console.log("No file uploaded");
-      next();
+      return next(); // return to stop execution
     }
 
     const filePath = req.file.path;

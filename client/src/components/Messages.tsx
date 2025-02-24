@@ -5,17 +5,17 @@ import { SocketContext } from "../contexts/SocketContext";
 import EmptyConversation from "./EmptyConversation";
 import { ConversationsContext } from "../contexts/ConversationsContext";
 import { AuthContext } from "../contexts/AuthContext";
-import useGetConversation from "../hooks/useGetConversation";
+// import useGetConversation from "../hooks/useGetConversation";
 
 export default function Messages() {
   const lastMessageRef = useRef<HTMLDivElement>(null);
-  const { selectedConversation } = useContext(ConversationContext) as any; // Cast to any
-  const [messages, setMessages] = useState<any[]>([]); // Cast messages as any[]
+  const { selectedConversation } = useContext(ConversationContext) as any;
+  const [messages, setMessages] = useState<any[]>([]);
   const { socket } = useContext(SocketContext);
-  const { setConversations } = useContext(ConversationsContext) as any; // Cast to any
-  const { authUser } = useContext(AuthContext) as any; // Cast to any
-  const [lastMessageSeen, setLastMessageSeen] = useState<any[]>([]); // Cast to any[]
-  const { getConversationById } = useGetConversation();
+  const { setConversations } = useContext(ConversationsContext) as any;
+  const { authUser } = useContext(AuthContext) as any;
+  const [lastMessageSeen, setLastMessageSeen] = useState<any[]>([]);
+  // const { getConversationById } = useGetConversation();
 
   useEffect(() => {
     if (selectedConversation) {
@@ -25,30 +25,28 @@ export default function Messages() {
 
   useEffect(() => {
     // update new message
-    socket?.on("message", ({ conversation }: any) => { // Cast to any
+    socket?.on("message", async ({ message, conversation }: any) => {
       if (selectedConversation?._id === conversation._id) {
-        getConversationById(conversation._id); // refetch - might change later
+        console.log("New message received", message);
+        setMessages(prevMessages => [...prevMessages, message]);
+        // getConversationById(conversation._id);
         conversation.messages.at(-1).seen.push(authUser);
       }
       // update sidebar
       setConversations((prevConvs: any[]) => [
         conversation,
-        ...prevConvs.filter((conv: any) => conv._id !== conversation._id), // Cast to any
+        ...prevConvs.filter((conv: any) => conv._id !== conversation._id),
       ]);
     });
 
     // update last message seen
-    socket?.on("read", ({ newSeen, conversation }: any) => { // Cast to any
+    socket?.on("read", ({ newSeen, conversation }: any) => {
       if (selectedConversation?._id === conversation._id) {
         setLastMessageSeen(newSeen);
       }
     });
 
-    return () => {
-      socket?.off("message");
-      socket?.off("read");
-    };
-  }, [socket, messages]);
+  }, [socket, socket?.on, messages]);
 
   useEffect(() => {
     setLastMessageSeen((messages.at(-1) as any)?.seen);
@@ -77,9 +75,9 @@ export default function Messages() {
                     {lastMessageSeen
                       .filter(
                         (user: any) =>
-                          user._id !== (authUser?._id) && user._id !== (message as any).sender._id // Cast as any
+                          user._id !== (authUser?._id) && user._id !== (message as any).sender._id
                       )
-                      .map((user: any) => ( // Cast as any
+                      .map((user: any) => (
                         <img
                           key={user._id}
                           src={user.profilePic}
