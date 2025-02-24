@@ -5,7 +5,7 @@ import { SocketContext } from "../contexts/SocketContext";
 import EmptyConversation from "./EmptyConversation";
 import { ConversationsContext } from "../contexts/ConversationsContext";
 import { AuthContext } from "../contexts/AuthContext";
-// import useGetConversation from "../hooks/useGetConversation";
+import useGetConversation from "../hooks/useGetConversation";
 
 export default function Messages() {
   const lastMessageRef = useRef<HTMLDivElement>(null);
@@ -15,7 +15,7 @@ export default function Messages() {
   const { setConversations } = useContext(ConversationsContext) as any;
   const { authUser } = useContext(AuthContext) as any;
   const [lastMessageSeen, setLastMessageSeen] = useState<any[]>([]);
-  // const { getConversationById } = useGetConversation();
+  const { getConversationById } = useGetConversation();
 
   useEffect(() => {
     if (selectedConversation) {
@@ -25,11 +25,11 @@ export default function Messages() {
 
   useEffect(() => {
     // update new message
-    socket?.on("message", async ({ message, conversation }: any) => {
+    socket?.on("message", ({ message, conversation }: any) => {
       if (selectedConversation?._id === conversation._id) {
         console.log("New message received", message);
-        setMessages(prevMessages => [...prevMessages, message]);
-        // getConversationById(conversation._id);
+        // setMessages(prevMessages => [...prevMessages, message]);
+        getConversationById(conversation._id);
         conversation.messages.at(-1).seen.push(authUser);
       }
       // update sidebar
@@ -46,7 +46,7 @@ export default function Messages() {
       }
     });
 
-  }, [socket, socket?.on, messages]);
+  }, [socket, messages]);
 
   useEffect(() => {
     setLastMessageSeen((messages.at(-1) as any)?.seen);

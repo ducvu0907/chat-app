@@ -68,7 +68,9 @@ export default async function sendMessage(req, res) {
     ]);
 
     // broadcast
-    io.emit("message", { message, conversation });
+    participantSocketIds.forEach(socketId => {
+      io.to(socketId).emit("message", { message, conversation });
+    });
 
     // write to cache if exists, should persist to handle the write even if cache failed
     if (cachedConversation) {
