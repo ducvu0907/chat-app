@@ -6,6 +6,13 @@ services:
     volumes: 
       - mongo-data:/data/db
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis-data:/data"
+
   # multiple backend instances to test nginx load balance
   server-1:
     build: ./server
@@ -16,6 +23,7 @@ services:
     depends_on:
       - mongo
       - minio
+      - redis
 
   server-2:
     build: ./server
@@ -26,6 +34,7 @@ services:
     depends_on:
       - mongo
       - minio
+      - redis
 
   minio:
     image: minio/minio:latest
@@ -51,3 +60,4 @@ services:
 volumes:
   mongo-data:
   minio-data:
+  redis-data:

@@ -1,16 +1,19 @@
 import express from "express";
 import { createServer } from "http";
+import { createClient } from "redis";
 import { Server } from "socket.io";
 import * as Minio from "minio";
 
 const app = express();
 const server = createServer(app);
+// ws server
 const io = new Server(server, {
   cors: {
     origin: "*"
   },
 });
 
+// minio client
 const minioClient = new Minio.Client({
   endPoint: 'minio',
   port: 9000,
@@ -19,6 +22,14 @@ const minioClient = new Minio.Client({
   secretKey: 'bdPYjeDUi1C9gyuPBMrUyE9ldrJ54YP3pIzKymIv',
 });
 
+// redis client
+const redisClient = createClient({
+  url: "redis://redis:6379",
+});
+redisClient.on("error", error => console.log("Redis client error", error))
+await redisClient.connect();
+
+// map user id to corresponding socket id
 const userSocket = {};
 
 function getUserSocketId(id) {
@@ -88,4 +99,4 @@ io.on("connection", (socket) => {
 
 });
 
-export { app, server, io, getUserSocketId, minioClient };
+export { app, server, io, getUserSocketId, minioClient, redisClient };

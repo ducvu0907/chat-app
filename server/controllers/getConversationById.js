@@ -1,11 +1,13 @@
 import ConversationModel from "../models/conversation.js";
 import UserModel from "../models/user.js";
 import { getUserSocketId, io } from "../socket/server.js";
+import { redisClient } from "../socket/server.js";
 
 export default async function getConversationById(req, res) {
   try {
     const currentUserId = req.user._id;
     const conversationId = req.params.conversationId;
+    const cachedKey = `conversation:${conversationId}`;
     const user = await UserModel.findOne({ _id: currentUserId });
     if (!user) {
       res.status(400).json({
@@ -28,7 +30,6 @@ export default async function getConversationById(req, res) {
         ],
       }
     ]);
-
 
     if (!conversation) {
       return res.status(400).json({
@@ -63,6 +64,9 @@ export default async function getConversationById(req, res) {
       path: "seen",
       select: "name profilePic"
     });
+
+    // cache conversation in redis for 5 mins
+    await redisClient.setEx(cachedKey, 300, JSON.stringify(conversation));
 
     res.status(200).json(conversation);
 

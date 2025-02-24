@@ -11,6 +11,7 @@ import verifyToken from "../middlewares/verifyToken.js";
 import getConversationByUserId from "../controllers/getConversationByUserId.js";
 import createGroupConversation from "../controllers/createGroupConversation.js";
 import { getFileUrlFromMinio, uploadFileToMinio } from "../middlewares/minioHelper.js";
+import { getCachedConversationById } from "../middlewares/cacheMessages.js";
 // setup uploads storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -35,7 +36,7 @@ router.get("/users", verifyToken, getUsers);
 // conversation route
 router.get("/conversations", verifyToken, getConversations);
 router.post("/conversations/group", verifyToken, createGroupConversation);
-router.get("/conversations/:conversationId", verifyToken, getConversationById);
+router.get("/conversations/:conversationId", verifyToken, getCachedConversationById, getConversationById);
 router.get("/conversations/user/:receiverId", verifyToken, getConversationByUserId);
 
 // message route
