@@ -16,10 +16,12 @@ export function SocketContextProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (authUser) {
-      const socket = io(`http://localhost:5000`, {
+      const socket = io("/", {
+        path: "/socket.io/",
         query: {
           userId: authUser._id,
         },
+        transports: ["websocket"],
       });
       setSocket(socket);
       socket.on("get-online-users", (users) => {
